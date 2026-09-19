@@ -66,6 +66,8 @@ func _spawn_cpus() -> void:
 	for index in range(cpu_count):
 		var cpu: ArcadeKart = KART_SCENE.instantiate() as ArcadeKart
 		cpu.name = "CPU%d" % (index + 1)
+		if index % 2 == 0:
+			cpu.get_node("Visuals/Rider").look = preload("res://resources/characters/default_female.tres")
 		var grid_distance: float = 0.0 if index == 0 else -5.0
 		var pose: Transform3D = route.sample(grid_distance)
 		pose.origin += pose.basis.x * lanes[index] + Vector3.UP * 0.12

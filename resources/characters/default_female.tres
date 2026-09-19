@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CharacterLook" format=3]
+[ext_resource type="Script" path="res://resources/characters/character_look.gd" id="1"]
+[resource]
+script = ExtResource("1")
+body_id = &"char_body_female"
+hair_id = &"char_hair_02"
+shirt_id = &"char_shirt_02"
+pants_id = &"char_pants_02"
+shoes_id = &"char_shoes_02"
+eyes_id = &"char_eyes_01"
+skin_tone_id = &"warm_01"

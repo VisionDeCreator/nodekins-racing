@@ -1,9 +1,11 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 5a kart art. A modular Blender kart and deployed glider now
-replace the placeholders for every racer on the gray-box oval.
-See `docs/phase_5a.md` for assets, sockets, materials, and verification,
+Current milestone: Phase 5b character art. Male and female riders share a 24-bone
+rig and interchangeable hair, shirts, pants and shoes. Both ride the modular kart
+through the gray-box race, including drift, items and glide.
+See `docs/phase_5b.md` for character assets, poses and validation,
+`docs/phase_5a.md` for kart assets, sockets and materials,
 `docs/phase_4_5.md` for glide tuning, `docs/phase_4.md` for items,
 `docs/phase_3.md` for CPU logic, and `docs/phase_2.md` for race rules.
 
@@ -35,13 +37,15 @@ live standings for the player and three CPUs. CPU paint/labels are coral, green,
 For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
-godot --headless --path . --import
-godot --headless --fixed-fps 60 --path . res://scenes/test/KartArtVerification.tscn -- --phase5a-check
+godot --headless --editor --path . --import --quit
+godot --headless --fixed-fps 60 --path . res://scenes/test/CharacterVerification.tscn -- --phase5b-check
 ```
 
-Run the verification scene without `--headless` or `--fixed-fps 60` to capture front/rear,
-drift/boost, launch/glide/landing views in `artifacts/phase_5a/`. The QA scene pilots the player slot for repeatable checks;
+Run the verification scene without `--headless` or `--fixed-fps 60` to capture seated front/side,
+drift/boost, launch/glide/landing views in `artifacts/phase_5b/`. The QA scene pilots the player slot for repeatable checks;
 the normal main scene leaves it under human control.
+`scenes/test/CharacterGallery.tscn` shows both default outfits plus idle/victory poses
+and checks all 32 body/outfit combinations against the imported rig contract.
 On this Mac the engine executable is `/Applications/Godot.app/Contents/MacOS/Godot`.
 
 ## Desktop exports
@@ -68,6 +72,12 @@ development. Distribution signing and notarization are not part of Phase 0.
 | Location | Purpose |
 | --- | --- |
 | `scenes/track/Track.tscn` | Current main scene: player + three CPUs, three laps |
+| `assets/characters/*.glb` | Two compatible body rigs and one shared appearance-part library |
+| `resources/characters/` | Compact ID-based looks and male/female defaults |
+| `scenes/characters/` | Reusable character assembler and visual-only kart rider |
+| `source_assets/phase_5b/characters_01.blend` | Versioned editable character source |
+| `scenes/test/CharacterGallery.tscn` | Default outfits, idle/victory and shared-rig verification |
+| `scenes/test/CharacterVerification.tscn` | Full race with riders and close evidence screenshots |
 | `assets/karts/kart_01.glb` | Blender kart: chassis, four shared wheels, spoiler, deployed glider |
 | `assets/karts/kart_paint.gdshader` | Chassis grayscale mask, per-kart paint, drift/hit feedback |
 | `source_assets/phase_5a/kart_01.blend` | Versioned editable Blender source |
@@ -101,6 +111,7 @@ development. Distribution signing and notarization are not part of Phase 0.
 | `docs/phase_3.md` | AI implementation, tuning, and verification |
 | `docs/phase_4.md` | Item implementation and verification |
 | `docs/phase_4_5.md` | Glide implementation, tuning, and verification |
+| `docs/phase_5b.md` | Character exports, shared skeleton, sockets, outfits and validation |
 | `docs/phase_5a.md` | Modular kart source, coordinate convention, attachment rig, and validation |
 
 The Phase 0 pipeline source is
@@ -108,6 +119,8 @@ The Phase 0 pipeline source is
 Keep that source, the repository snapshot, and the GLB in sync when re-exporting.
 The current kart source is `/Users/shane/Gaming/Assets/nodekins-racing/phase_5a/kart_01.blend`;
 its matching snapshot lives under `source_assets/phase_5a`.
+The character source is `/Users/shane/Gaming/Assets/nodekins-racing/phase_5b/characters_01.blend`;
+its matching snapshot lives under `source_assets/phase_5b`.
 Future production assets must be made and exported using Blender MCP. Gameplay is proven
 with gray-box geometry before the art phase.
 
