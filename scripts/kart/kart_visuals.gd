@@ -27,7 +27,13 @@ func _physics_process(delta: float) -> void:
 	_material.emission = color
 	_material.emission_energy_multiplier = 0.6 if index > 0 else 0.0
 	var target_yaw: float = -drift.direction * deg_to_rad(kart.stats.drift_visual_yaw) if drift.drifting else 0.0
-	rotation.y = lerp_angle(rotation.y, target_yaw, 1.0 - exp(-10.0 * delta))
+	if kart.controls.suppression_remaining > 0.0:
+		rotation.y += TAU * 1.8 * delta
+		_material.albedo_color = Color("ff6375")
+		_material.emission = Color("ff6375")
+		_material.emission_energy_multiplier = 0.5
+	else:
+		rotation.y = lerp_angle(rotation.y, target_yaw, 1.0 - exp(-10.0 * delta))
 	rotation.z = lerpf(rotation.z, -kart.controls.steering * 0.04 * minf(kart.speed / kart.stats.top_speed, 1.0), 1.0 - exp(-10.0 * delta))
 	booster.visible = drift.is_boosting()
 	_trail_material.albedo_color = color

@@ -1,9 +1,10 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 3 AI racers. Race three CPU opponents around the gray-box oval,
-with shared kart handling, drift-boost, subtle rubber-banding, and checkpoint recovery.
-See `docs/phase_3.md` for AI tuning and verification; `docs/phase_2.md` describes race rules.
+Current milestone: Phase 4 items. Race three CPU opponents around the gray-box oval,
+collect position-weighted Boost/Shell/Banana items, and use them to change the race.
+See `docs/phase_4.md` for item tuning and verification, `docs/phase_3.md` for CPU logic,
+and `docs/phase_2.md` for race rules.
 
 ## Current scope
 
@@ -22,6 +23,7 @@ locks all four karts; pass CP1–CP7 and start/finish in order for three laps. E
 restarts the race. The flat Phase 1 driving lab remains at `scenes/test/TestPlane.tscn`.
 Keyboard: WASD/arrows, Space to drift, R for checkpoint recovery. Gamepad: left stick, right trigger
 to accelerate, left trigger to brake, south face button to drift, north face button to reset.
+Press **E / gamepad west face button** to use the held item. Cyan boxes refill after four seconds.
 Hold drift while steering; release after charging cyan/amber/violet for a mini-turbo.
 The HUD shows lap, position, timer, last/next checkpoint, speed, mini-turbo charge, and
 live standings for the player and three CPUs. CPU noses/labels are coral, green, and gold.
@@ -30,11 +32,11 @@ For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
 godot --headless --path . --import
-godot --headless --path . res://scenes/test/AIGridVerification.tscn -- --phase3-check
+godot --headless --path . res://scenes/test/ItemVerification.tscn -- --phase4-check
 ```
 
-Run the verification scene without `--headless` to capture all four moving karts
-in `artifacts/phase_3/`. The QA scene pilots the player slot for repeatable checks;
+Run the verification scene without `--headless` to capture the item HUD and a deployed trap
+in `artifacts/phase_4/`. The QA scene pilots the player slot for repeatable checks;
 the normal main scene leaves it under human control.
 On this Mac the engine executable is `/Applications/Godot.app/Contents/MacOS/Godot`.
 
@@ -62,6 +64,10 @@ development. Distribution signing and notarization are not part of Phase 0.
 | Location | Purpose |
 | --- | --- |
 | `scenes/track/Track.tscn` | Current main scene: player + three CPUs, three laps |
+| `scenes/items/ItemBox.tscn` | Rotating pickup with respawn cooldown |
+| `resources/items/*.tres` | Automatically discovered item definitions and effect parameters |
+| `scripts/items/` | Inventory, weighted rolls, shared effects, deployed actors, and item HUD |
+| `scenes/test/ItemVerification.tscn` | Full item race, collisions, input, and lifecycle checks |
 | `scripts/ai/kart_ai.gd` | Shared-input CPU driver and progress watchdog |
 | `resources/ai/default_ai.tres` | Tunable path, drift, rubber-band, and recovery decisions |
 | `scenes/test/AIGridVerification.tscn` | Full-grid race and AI acceptance checks |
@@ -80,7 +86,8 @@ development. Distribution signing and notarization are not part of Phase 0.
 | `docs/phase_0.md` | Historical setup verification |
 | `docs/phase_1.md` | Phase 1 movement implementation and tuning handoff |
 | `docs/phase_2.md` | Track/race implementation and verification |
-| `docs/phase_3.md` | Current AI implementation, tuning, and verification |
+| `docs/phase_3.md` | AI implementation, tuning, and verification |
+| `docs/phase_4.md` | Current item implementation and verification |
 
 The editable asset workspace copy is
 `/Users/shane/Gaming/Assets/nodekins-racing/phase_0/pipeline_test.blend`.

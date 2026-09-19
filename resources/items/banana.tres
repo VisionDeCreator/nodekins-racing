@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=5 format=3]
+[ext_resource type="Script" path="res://resources/items/item_definition.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/items/deploy_effect.gd" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/items/Banana.tscn" id="3"]
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2")
+actor_scene = ExtResource("3")
+forward_offset = -2.8
+arming_delay = 0.45
+[resource]
+script = ExtResource("1")
+id = &"banana"
+display_name = "BANANA"
+description = "Drop a trap behind; spins out the first kart that crosses it."
+duration = 18.0
+color = Color(1, 0.85, 0.22, 1)
+front_weight = 6.0
+back_weight = 1.0
+cpu_delay = 1.1
+effect = SubResource("Effect")

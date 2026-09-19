@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=5 format=3]
+[ext_resource type="Script" path="res://resources/items/item_definition.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/items/deploy_effect.gd" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/items/Shell.tscn" id="3"]
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2")
+actor_scene = ExtResource("3")
+travel_speed = 36.0
+homing_degrees_per_second = 55.0
+forward_offset = 2.1
+arming_delay = 0.0
+wait_for_target = true
+[resource]
+script = ExtResource("1")
+id = &"shell"
+display_name = "SHELL"
+description = "Forward shell with light homing; first hit spins out a kart."
+duration = 4.0
+color = Color(1, 0.35, 0.28, 1)
+front_weight = 2.0
+back_weight = 4.0
+cpu_delay = 0.7
+effect = SubResource("Effect")

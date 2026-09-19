@@ -5,6 +5,9 @@ extends Node3D
 const KART_SCENE: PackedScene = preload("res://scenes/kart/Kart.tscn")
 const CPU_TUNING: AITuning = preload("res://resources/ai/default_ai.tres")
 @export_range(0, 3) var cpu_count: int = 3
+@export var items_enabled: bool = true
+@export var item_random_seed: int = 0
+var items: RaceItems
 @export var route: TrackRoute
 var cpu_drivers: Array[KartAI] = []
 @onready var player: ArcadeKart = $Player
@@ -27,9 +30,24 @@ func _ready() -> void:
 	RaceManager.register_kart(player, &"player", "Player")
 	_spawn_cpus()
 	player.get_node("ChaseCamera/SpringArm3D/Camera3D").make_current()
+	if items_enabled:
+		_setup_items()
 	RaceManager.start_race()
 	$OverviewCamera.look_at(Vector3(0, 4, 0))
 	print("[Race] Track ready: %.2f m loop, %d ordered gates, 3 laps, %d racers." % [route.length(), route.checkpoint_indices.size(), cpu_count + 1])
+
+func _setup_items() -> void:
+	items = RaceItems.new()
+	items.name = "Items"
+	items.random_seed = item_random_seed
+	add_child(items)
+	items.attach(player, &"player", false)
+	for driver: KartAI in cpu_drivers:
+		items.attach(driver.kart, driver.racer_id, true)
+	items.place_boxes(route)
+	var hud: CanvasLayer = preload("res://scenes/items/ItemHUD.tscn").instantiate()
+	hud.inventory = items.inventories[&"player"]
+	add_child(hud)
 
 func _spawn_cpus() -> void:
 	var lanes: Array[float] = [3.2, -3.2, 0.0]

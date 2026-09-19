@@ -29,11 +29,7 @@ func step(delta: float, controls: KartInput, grounded: bool, speed: float) -> vo
 		return
 	if drifting and not controls.drift_held:
 		if tier > 0:
-			boost_tier = tier
-			boost_multiplier = stats.mini_turbo_speed_multipliers[tier - 1]
-			boost_duration = stats.mini_turbo_durations[tier - 1]
-			boost_remaining = boost_duration
-			boost_started.emit(tier, boost_multiplier, boost_duration)
+			activate_boost(stats.mini_turbo_speed_multipliers[tier - 1], stats.mini_turbo_durations[tier - 1], tier)
 		_cancel_drift()
 		return
 	if not drifting and not is_boosting() and controls.drift_held:
@@ -47,6 +43,14 @@ func step(delta: float, controls: KartInput, grounded: bool, speed: float) -> vo
 		for index in range(3):
 			if charge_time + 0.00001 >= stats.mini_turbo_thresholds[index]:
 				tier = index + 1
+
+## Shared boost path for earned turbos and items. Strongest/longest wins; no multiplication.
+func activate_boost(multiplier: float, duration: float, tier_hint: int = 3) -> void:
+	boost_multiplier = maxf(boost_multiplier, multiplier)
+	boost_remaining = maxf(boost_remaining, duration)
+	boost_duration = boost_remaining
+	boost_tier = maxi(boost_tier, clampi(tier_hint, 1, 3))
+	boost_started.emit(boost_tier, boost_multiplier, boost_remaining)
 
 func steering_for(input_steering: float) -> float:
 	if not drifting:
