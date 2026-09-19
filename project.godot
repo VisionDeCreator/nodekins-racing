@@ -11,8 +11,8 @@ config_version=5
 [application]
 
 config/name="Nodekins Racing"
-run/main_scene="res://scenes/track/Track.tscn"
-config/version="0.5.2"
+run/main_scene="res://scenes/ui/Main.tscn"
+config/version="0.6.0"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -38,6 +38,15 @@ renderer/rendering_method="forward_plus"
 textures/vram_compression/import_etc2_astc=true
 
 [input]
+
+ui_accept={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"keycode":4194309), Object(InputEventKey,"keycode":4194310), Object(InputEventKey,"keycode":32), Object(InputEventJoypadButton,"device":-1,"button_index":0)]
+}
+ui_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"keycode":4194305), Object(InputEventJoypadButton,"device":-1,"button_index":1)]
+}
 
 kart_accelerate={
 "deadzone": 0.1,
@@ -77,3 +86,4 @@ kart_item={
 [autoload]
 
 RaceManager="*res://scripts/race/race_manager.gd"
+GameSession="*res://scripts/ui/menu/game_session.gd"

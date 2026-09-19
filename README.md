@@ -1,11 +1,12 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 5c track art. Loop 01 uses an original modular Blender kit,
-with toon road pieces, a tunnel, start arch, rails, item crystals and instanced scenery.
-Three working boost pads reuse the existing Boost item effect. The original route,
-checkpoints, collision geometry and glide gap are preserved.
-See `docs/phase_5c.md` for kit exports, snapping conventions and race verification,
+Current milestone: Phase 6 UI/UX. Launch into Title → Character Select → Track Select
+→ Countdown → Race → Results, with keyboard/gamepad/mouse navigation, live character
+previews, a race HUD/minimap, pause/exit controls and replay flow. Full customization
+remains deferred to Phase 6.5.
+See `docs/phase_6.md` for the flow, selection catalog and verification,
+`docs/phase_5c.md` for kit exports, snapping conventions and race verification,
 `docs/phase_5b.md` for character assets, poses and validation,
 `docs/phase_5a.md` for kart assets, sockets and materials,
 `docs/phase_4_5.md` for glide tuning, `docs/phase_4.md` for items,
@@ -23,9 +24,13 @@ export templates. Older versions have not been validated.
 
 ## Run
 
-Open `project.godot` in Godot and press **F5** to race Loop 01. The 3–2–1–GO countdown
-locks all four karts; pass CP1–CP7 and start/finish in order for three laps. Enter/gamepad Start
-restarts the race. The flat Phase 1 driving lab remains at `scenes/test/TestPlane.tscn`.
+Open `project.godot` in Godot and press **F5** for the title screen. Choose Play, a
+male/female default, and Skyline Loop (the existing Loop 01), then Start Race.
+Menus support arrows/Tab, D-pad/left stick, Enter/A and mouse; Esc/B goes back.
+Options is a placeholder. The 3–2–1–GO countdown
+locks all four karts; pass CP1–CP7 and start/finish in order for three laps.
+Esc/Enter/gamepad Start pauses; Resume, Choose Track and Main Menu are available.
+Results show the full field, with Race Again and Main Menu buttons. The flat Phase 1 driving lab remains at `scenes/test/TestPlane.tscn`.
 Keyboard: WASD/arrows, Space to drift, R for checkpoint recovery. Gamepad: left stick, right trigger
 to accelerate, left trigger to brake, south face button to drift, north face button to reset.
 Press **E / gamepad west face button** to use the held item. Cyan boxes refill after four seconds.
@@ -34,25 +39,23 @@ Cross the lime chevron pads before the tunnel for a two-second boost; they prese
 Drive up the marked launch ramp at speed to glide automatically across the 16 m gap. Steering
 allows gentle airborne corrections; landing retracts the wing automatically. Banana
 stays in the item slot until landing; Boost and Shell can be used in the air.
-The HUD shows lap, position, timer, last/next checkpoint, speed, mini-turbo charge, and
-live standings for the player and three CPUs. CPU paint/labels are coral, green, and gold.
+The HUD shows lap, ordinal position, timer, held item, speed, mini-turbo charge and
+a live circuit minimap. CPU paint/markers are coral, green, and gold.
+The standalone `scenes/track/Track.tscn` still provides the old diagnostic HUD and
+Enter/Start restart for development checks.
 
 For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
 godot --headless --editor --path . --import --quit
-godot --headless --fixed-fps 60 --path . res://scenes/test/TrackArtVerification.tscn -- --phase5c-check
-godot --headless --fixed-fps 60 --path . res://scenes/test/BoostPadVerification.tscn -- --phase5c-pads-check
+godot --headless --fixed-fps 60 --path . res://scenes/test/UIFlowVerification.tscn -- --phase6-check
 ```
 
-Run these verification scenes without `--headless` or `--fixed-fps 60` to capture the
-track overview, connection seam, items, pads, tunnel and glide gap in `artifacts/phase_5c/`.
-The first scene disables the new pads to compare the art swap against the saved
-pre-art race; the second tests the full race with working pads and their lifecycle.
-The QA scenes pilot the player slot for repeatable checks;
-the normal main scene leaves it under human control.
-`scenes/test/CharacterGallery.tscn` shows both default outfits plus idle/victory poses
-and checks all 32 body/outfit combinations against the imported rig contract.
+Run the UI verification scene without `--headless` or `--fixed-fps 60` to capture
+all menu screens, the live HUD and results in `artifacts/phase_6/`. It navigates
+through actual UI input events and drives two complete races with a QA player pilot.
+The normal main scene always leaves driving under human control.
+Historical verification scenes remain under `scenes/test/`.
 On this Mac the engine executable is `/Applications/Godot.app/Contents/MacOS/Godot`.
 
 ## Desktop exports
@@ -78,7 +81,11 @@ development. Distribution signing and notarization are not part of Phase 0.
 
 | Location | Purpose |
 | --- | --- |
-| `scenes/track/Track.tscn` | Current main scene: player + three CPUs, three laps |
+| `scenes/ui/Main.tscn` | Current main scene: complete title-to-race-to-results flow |
+| `scripts/ui/menu/` | Screen flow, live previews, shared theme, HUD and minimap |
+| `resources/ui/default_catalog.tres` | ID-based driver/track entries for selection |
+| `scenes/test/UIFlowVerification.tscn` | UI input navigation, two full races, HUD/results/cleanup checks |
+| `scenes/track/Track.tscn` | Standalone race scene: player + three CPUs, three laps |
 | `assets/track_kit/*.glb` | Fourteen original Blender track/environment assets |
 | `assets/track_kit/catalog.json` | Dimensions, exit sockets, triangle counts and axis convention |
 | `scenes/track/Loop01Art.tscn` | Modular visual cover for the unchanged gameplay geometry |
@@ -128,6 +135,7 @@ development. Distribution signing and notarization are not part of Phase 0.
 | `docs/phase_5b.md` | Character exports, shared skeleton, sockets, outfits and validation |
 | `docs/phase_5a.md` | Modular kart source, coordinate convention, attachment rig, and validation |
 | `docs/phase_5c.md` | Modular track kit, working boost pads and verification |
+| `docs/phase_6.md` | UI flow, selection state, HUD and verification |
 
 The Phase 0 pipeline source is
 `/Users/shane/Gaming/Assets/nodekins-racing/phase_0/pipeline_test.blend`.

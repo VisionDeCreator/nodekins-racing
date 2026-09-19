@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="MenuCatalog" format=3]
+[ext_resource type="Script" path="res://resources/ui/menu_catalog.gd" id="catalog"]
+[ext_resource type="Script" path="res://resources/ui/driver_entry.gd" id="driver"]
+[ext_resource type="Script" path="res://resources/ui/track_entry.gd" id="track"]
+[ext_resource type="Resource" path="res://resources/characters/default_male.tres" id="male"]
+[ext_resource type="Resource" path="res://resources/characters/default_female.tres" id="female"]
+[ext_resource type="Resource" path="res://resources/tracks/oval.tres" id="route"]
+[ext_resource type="Resource" path="res://resources/tracks/test_glide.tres" id="glide"]
+[ext_resource type="PackedScene" path="res://scenes/track/Track.tscn" id="race"]
+[sub_resource type="Resource" id="Male"]
+script = ExtResource("driver")
+id = &"char_body_male"
+display_name = "Male"
+description = "Blue tee · shorts · trainers"
+look = ExtResource("male")
+[sub_resource type="Resource" id="Female"]
+script = ExtResource("driver")
+id = &"char_body_female"
+display_name = "Female"
+description = "Orange jacket · trousers · boots"
+look = ExtResource("female")
+[sub_resource type="Resource" id="Loop"]
+script = ExtResource("track")
+id = &"loop_01"
+display_name = "SKYLINE LOOP"
+subtitle = "Loop 01 · Floating circuit"
+description = "Sweep through wide turns, charge your drift and take flight across the gap. Watch for items and the lime boost pads."
+features = PackedStringArray("WIDE TURNS", "GLIDE GAP", "ITEMS")
+scene = ExtResource("race")
+route = ExtResource("route")
+glide_section = ExtResource("glide")
+[resource]
+script = ExtResource("catalog")
+drivers = Array[ExtResource("driver")]([SubResource("Male"), SubResource("Female")])
+tracks = Array[ExtResource("track")]([SubResource("Loop")])
