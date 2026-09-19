@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="AITuning" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/ai/ai_tuning.gd" id="1"]
+
+[resource]
+resource_name = "Phase 3 provisional CPU decisions"
+script = ExtResource("1")
+catchup_cap = 0.06
+leader_penalty_cap = 0.04
+multiplier_change_per_second = 0.02
+no_progress_seconds = 3.0

@@ -96,3 +96,24 @@ theme_override_font_sizes/font_size = 13
 theme_override_colors/font_outline_color = Color(0.03, 0.04, 0.06, 1)
 theme_override_constants/outline_size = 4
 text = "ENTER / START  ·  RESTART RACE"
+
+[node name="Standings" type="PanelContainer" parent="."]
+offset_left = 28.0
+offset_top = 205.0
+offset_right = 315.0
+offset_bottom = 340.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Margin" type="MarginContainer" parent="Standings"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="StandingsText" type="Label" parent="Standings/Margin"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_constants/line_spacing = 6
+text = "RACE ORDER"

@@ -2,7 +2,11 @@ extends Node3D
 ## Builds placeholder boxes from the same centerline used by the race systems.
 ## Replace this builder with authored track geometry later; RaceManager does not depend on it.
 
+const KART_SCENE: PackedScene = preload("res://scenes/kart/Kart.tscn")
+const CPU_TUNING: AITuning = preload("res://resources/ai/default_ai.tres")
+@export_range(0, 3) var cpu_count: int = 3
 @export var route: TrackRoute
+var cpu_drivers: Array[KartAI] = []
 @onready var player: ArcadeKart = $Player
 var _world: StaticBody3D
 var _road_material: StandardMaterial3D
@@ -15,10 +19,59 @@ func _ready() -> void:
 	route.prepare()
 	_build_graybox()
 	RaceManager.configure(route, 3)
+	if cpu_count > 0:
+		player.global_position.x -= 2.7
+		player.collision_mask = 3
+		player.add_to_group("race_karts")
+		_mark_kart(player, "PLAYER", Color("e8edf2"))
 	RaceManager.register_kart(player, &"player", "Player")
+	_spawn_cpus()
+	player.get_node("ChaseCamera/SpringArm3D/Camera3D").make_current()
 	RaceManager.start_race()
 	$OverviewCamera.look_at(Vector3(0, 4, 0))
-	print("[Phase 2] Track ready: %.2f m loop, %d ordered gates, 3 laps." % [route.length(), route.checkpoint_indices.size()])
+	print("[Race] Track ready: %.2f m loop, %d ordered gates, 3 laps, %d racers." % [route.length(), route.checkpoint_indices.size(), cpu_count + 1])
+
+func _spawn_cpus() -> void:
+	var lanes: Array[float] = [3.2, -3.2, 0.0]
+	var colors: Array[Color] = [Color("ff805e"), Color("83e870"), Color("e3b455")]
+	for index in range(cpu_count):
+		var cpu: ArcadeKart = KART_SCENE.instantiate() as ArcadeKart
+		cpu.name = "CPU%d" % (index + 1)
+		var grid_distance: float = 0.0 if index == 0 else -5.0
+		var pose: Transform3D = route.sample(grid_distance)
+		pose.origin += pose.basis.x * lanes[index] + Vector3.UP * 0.12
+		cpu.transform = pose
+		cpu.collision_mask = 3
+		add_child(cpu)
+		cpu.add_to_group("race_karts")
+		cpu.get_node("ChaseCamera").set_process(false)
+		cpu.get_node("ChaseCamera/SpringArm3D/Camera3D").current = false
+		var racer_id := StringName("cpu_%d" % (index + 1))
+		RaceManager.register_kart(cpu, racer_id, "CPU %d" % (index + 1))
+		var driver := KartAI.new()
+		driver.name = "CPUDriver"
+		driver.racer_id = racer_id
+		driver.tuning = CPU_TUNING
+		driver.lane_offset = lanes[index]
+		cpu.add_child(driver)
+		cpu.get_node("ChaseCamera").set_process(false)
+		cpu_drivers.append(driver)
+		_mark_kart(cpu, "CPU %d" % (index + 1), colors[index])
+
+func _mark_kart(kart: ArcadeKart, label_text: String, color: Color) -> void:
+	# Persistent identity remains readable when the body changes color for drift/boost.
+	var material := StandardMaterial3D.new()
+	material.albedo_color = color
+	kart.get_node("Visuals/Nose").material_override = material
+	var label := Label3D.new()
+	label.text = label_text
+	label.position = Vector3(0, 1.8, 0)
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	label.modulate = color
+	label.font_size = 42
+	label.outline_size = 10
+	label.pixel_size = 0.009
+	kart.add_child(label)
 
 func _exit_tree() -> void:
 	RaceManager.clear_race()

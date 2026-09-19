@@ -6,12 +6,18 @@ extends CanvasLayer
 @onready var progress: Label = $Summary/Margin/Rows/Progress
 @onready var countdown: Label = $Center/Rows/Countdown
 @onready var message: Label = $Center/Rows/Message
+@onready var standings_label: Label = $Standings/Margin/StandingsText
 @onready var banner: PanelContainer = $Center
 
 func _process(_delta: float) -> void:
 	var state: Dictionary = RaceManager.get_racer_state(racer_id)
 	if state.is_empty():
 		return
+	var lines: PackedStringArray = ["RACE ORDER"]
+	for other: Dictionary in RaceManager.get_standings():
+		var detail: String = _time(float(other.finish_time)) if other.finished else "L%d · CP%d" % [other.lap, other.last_checkpoint]
+		lines.append("%d  %s   %s" % [other.position, other.name, detail])
+	standings_label.text = "\n".join(lines)
 	summary.text = "LAP %d / %d    ·    POS %d / %d" % [state.lap, state.total_laps, state.position, state.racer_count]
 	timing.text = "TIME  " + _time(float(state.finish_time) if state.finished else float(state.elapsed))
 	progress.text = "CP %d → %d    ·    %.0f m progressed" % [state.last_checkpoint, state.next_checkpoint, state.distance_progress]
