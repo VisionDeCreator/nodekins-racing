@@ -1,10 +1,12 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 5b character art. Male and female riders share a 24-bone
-rig and interchangeable hair, shirts, pants and shoes. Both ride the modular kart
-through the gray-box race, including drift, items and glide.
-See `docs/phase_5b.md` for character assets, poses and validation,
+Current milestone: Phase 5c track art. Loop 01 uses an original modular Blender kit,
+with toon road pieces, a tunnel, start arch, rails, item crystals and instanced scenery.
+Three working boost pads reuse the existing Boost item effect. The original route,
+checkpoints, collision geometry and glide gap are preserved.
+See `docs/phase_5c.md` for kit exports, snapping conventions and race verification,
+`docs/phase_5b.md` for character assets, poses and validation,
 `docs/phase_5a.md` for kart assets, sockets and materials,
 `docs/phase_4_5.md` for glide tuning, `docs/phase_4.md` for items,
 `docs/phase_3.md` for CPU logic, and `docs/phase_2.md` for race rules.
@@ -28,7 +30,8 @@ Keyboard: WASD/arrows, Space to drift, R for checkpoint recovery. Gamepad: left 
 to accelerate, left trigger to brake, south face button to drift, north face button to reset.
 Press **E / gamepad west face button** to use the held item. Cyan boxes refill after four seconds.
 Hold drift while steering; release after charging cyan/amber/violet for a mini-turbo.
-Drive up the orange ramp at speed to glide automatically across the 16 m gap. Steering
+Cross the lime chevron pads before the tunnel for a two-second boost; they preserve your held item.
+Drive up the marked launch ramp at speed to glide automatically across the 16 m gap. Steering
 allows gentle airborne corrections; landing retracts the wing automatically. Banana
 stays in the item slot until landing; Boost and Shell can be used in the air.
 The HUD shows lap, position, timer, last/next checkpoint, speed, mini-turbo charge, and
@@ -38,11 +41,15 @@ For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
 godot --headless --editor --path . --import --quit
-godot --headless --fixed-fps 60 --path . res://scenes/test/CharacterVerification.tscn -- --phase5b-check
+godot --headless --fixed-fps 60 --path . res://scenes/test/TrackArtVerification.tscn -- --phase5c-check
+godot --headless --fixed-fps 60 --path . res://scenes/test/BoostPadVerification.tscn -- --phase5c-pads-check
 ```
 
-Run the verification scene without `--headless` or `--fixed-fps 60` to capture seated front/side,
-drift/boost, launch/glide/landing views in `artifacts/phase_5b/`. The QA scene pilots the player slot for repeatable checks;
+Run these verification scenes without `--headless` or `--fixed-fps 60` to capture the
+track overview, connection seam, items, pads, tunnel and glide gap in `artifacts/phase_5c/`.
+The first scene disables the new pads to compare the art swap against the saved
+pre-art race; the second tests the full race with working pads and their lifecycle.
+The QA scenes pilot the player slot for repeatable checks;
 the normal main scene leaves it under human control.
 `scenes/test/CharacterGallery.tscn` shows both default outfits plus idle/victory poses
 and checks all 32 body/outfit combinations against the imported rig contract.
@@ -72,6 +79,13 @@ development. Distribution signing and notarization are not part of Phase 0.
 | Location | Purpose |
 | --- | --- |
 | `scenes/track/Track.tscn` | Current main scene: player + three CPUs, three laps |
+| `assets/track_kit/*.glb` | Fourteen original Blender track/environment assets |
+| `assets/track_kit/catalog.json` | Dimensions, exit sockets, triangle counts and axis convention |
+| `scenes/track/Loop01Art.tscn` | Modular visual cover for the unchanged gameplay geometry |
+| `scenes/track/BoostPad.tscn` | Reusable trigger using the existing Boost item effect |
+| `source_assets/phase_5c/track_kit_01.blend` | Versioned editable track-kit source |
+| `scenes/test/TrackArtVerification.tscn` | Pre-art geometry, seam and deterministic race comparison |
+| `scenes/test/BoostPadVerification.tscn` | Full race with pads, crossing/lock/boost stacking checks |
 | `assets/characters/*.glb` | Two compatible body rigs and one shared appearance-part library |
 | `resources/characters/` | Compact ID-based looks and male/female defaults |
 | `scenes/characters/` | Reusable character assembler and visual-only kart rider |
@@ -113,6 +127,7 @@ development. Distribution signing and notarization are not part of Phase 0.
 | `docs/phase_4_5.md` | Glide implementation, tuning, and verification |
 | `docs/phase_5b.md` | Character exports, shared skeleton, sockets, outfits and validation |
 | `docs/phase_5a.md` | Modular kart source, coordinate convention, attachment rig, and validation |
+| `docs/phase_5c.md` | Modular track kit, working boost pads and verification |
 
 The Phase 0 pipeline source is
 `/Users/shane/Gaming/Assets/nodekins-racing/phase_0/pipeline_test.blend`.
@@ -121,6 +136,8 @@ The current kart source is `/Users/shane/Gaming/Assets/nodekins-racing/phase_5a/
 its matching snapshot lives under `source_assets/phase_5a`.
 The character source is `/Users/shane/Gaming/Assets/nodekins-racing/phase_5b/characters_01.blend`;
 its matching snapshot lives under `source_assets/phase_5b`.
+The track-kit source is `/Users/shane/Gaming/Assets/nodekins-racing/phase_5c/track_kit_01.blend`;
+its matching snapshot lives under `source_assets/phase_5c`.
 Future production assets must be made and exported using Blender MCP. Gameplay is proven
 with gray-box geometry before the art phase.
 

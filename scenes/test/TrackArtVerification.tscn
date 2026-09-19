@@ -1,0 +1,8 @@
+[gd_scene format=3]
+[ext_resource type="PackedScene" path="res://scenes/track/Track.tscn" id="1"]
+[ext_resource type="Script" path="res://tools/phase_5c/verify_track_art.gd" id="2"]
+[node name="TrackArtVerification" type="Node"]
+script = ExtResource("2")
+[node name="Track" parent="." instance=ExtResource("1")]
+item_random_seed = 445
+boost_pads_enabled = false

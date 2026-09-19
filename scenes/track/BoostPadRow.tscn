@@ -1,0 +1,12 @@
+[gd_scene format=3]
+[ext_resource type="PackedScene" path="res://scenes/track/BoostPad.tscn" id="1"]
+[node name="BoostPads" type="Node3D"]
+[node name="WestInner" parent="." instance=ExtResource("1")]
+position = Vector3(-27.75, 4.008, -30)
+rotation_degrees = Vector3(0, 180, 0)
+[node name="WestCenter" parent="." instance=ExtResource("1")]
+position = Vector3(-32, 4.008, -30)
+rotation_degrees = Vector3(0, 180, 0)
+[node name="WestOuter" parent="." instance=ExtResource("1")]
+position = Vector3(-36.25, 4.008, -30)
+rotation_degrees = Vector3(0, 180, 0)

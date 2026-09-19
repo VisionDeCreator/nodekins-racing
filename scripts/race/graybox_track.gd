@@ -5,6 +5,8 @@ extends Node3D
 const KART_SCENE: PackedScene = preload("res://scenes/kart/Kart.tscn")
 const CPU_TUNING: AITuning = preload("res://resources/ai/default_ai.tres")
 @export_range(0, 3) var cpu_count: int = 3
+@export var boost_pads_enabled: bool = true
+@export var art_enabled: bool = true
 @export var glide_enabled: bool = true
 @export var glide_section: GlideSection = preload("res://resources/tracks/test_glide.tres")
 @export var items_enabled: bool = true
@@ -41,6 +43,10 @@ func _ready() -> void:
 	player.get_node("ChaseCamera/SpringArm3D/Camera3D").make_current()
 	if items_enabled:
 		_setup_items()
+	if boost_pads_enabled and items_enabled:
+		add_child(preload("res://scenes/track/BoostPadRow.tscn").instantiate())
+	if art_enabled:
+		add_child(preload("res://scenes/track/Loop01Art.tscn").instantiate())
 	RaceManager.start_race()
 	$OverviewCamera.look_at(Vector3(0, 4, 0))
 	print("[Race] Track ready: %.2f m loop, %d ordered gates, 3 laps, %d racers." % [route.length(), route.checkpoint_indices.size(), cpu_count + 1])

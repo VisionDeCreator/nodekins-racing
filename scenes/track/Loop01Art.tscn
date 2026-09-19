@@ -1,0 +1,502 @@
+[gd_scene format=3]
+[ext_resource type="PackedScene" path="res://assets/track_kit/track_straight_01.glb" id="1"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/track_curve_45_01.glb" id="2"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/track_curve_90_01.glb" id="3"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/track_hill_01.glb" id="4"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/track_ramp_01.glb" id="5"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/track_barrier_01.glb" id="6"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/track_tunnel_01.glb" id="7"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/track_arch_01.glb" id="8"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/prop_itembox.glb" id="9"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/prop_boostpad.glb" id="10"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/prop_banner_01.glb" id="11"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/prop_deco_01.glb" id="12"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/prop_deco_02.glb" id="13"]
+[ext_resource type="PackedScene" path="res://assets/track_kit/environment_island_01.glb" id="14"]
+[ext_resource type="Script" path="res://scripts/environment/track_art.gd" id="art"]
+[node name="EnvironmentKit" type="Node3D"]
+script = ExtResource("art")
+[node name="Road00" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, 36.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail00L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, 36.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail00R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, 36.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road01" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, 32.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail01L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, 32.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail01R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, 32.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road02" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, 28.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail02L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, 28.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail02R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, 28.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road03" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, 24.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail03L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, 24.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail03R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, 24.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road04" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, 20.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail04L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, 20.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="LaunchRamp" parent="." instance=ExtResource("5")]
+position = Vector3(32.00000000, 4.00000000, 16.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_ramp_01"
+metadata/road_piece = true
+[node name="Road12" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, -12.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail12L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, -12.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail12R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, -12.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road13" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, -16.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail13L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, -16.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail13R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, -16.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road14" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, -20.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail14L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, -20.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail14R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, -20.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road15" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, -24.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail15L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, -24.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail15R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, -24.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road16" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, -28.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail16L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, -28.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail16R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, -28.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road17" parent="." instance=ExtResource("1")]
+position = Vector3(32.00000000, 4.00000000, -32.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail17L" parent="." instance=ExtResource("6")]
+position = Vector3(24.80000000, 4.00000000, -32.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail17R" parent="." instance=ExtResource("6")]
+position = Vector3(39.20000000, 4.00000000, -32.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="NorthCurveA" parent="." instance=ExtResource("3")]
+position = Vector3(32.00000000, 4.00000000, -36.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_curve_90_01"
+metadata/road_piece = true
+[node name="NorthCurveB" parent="." instance=ExtResource("3")]
+position = Vector3(0.00000000, 4.00000000, -68.00000000)
+rotation_degrees = Vector3(0, 90, 0)
+metadata/kit_id = "track_curve_90_01"
+metadata/road_piece = true
+[node name="Road42" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, -36.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail42L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, -36.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail42R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, -36.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road43" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, -32.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail43L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, -32.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail43R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, -32.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road44" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, -28.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail44L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, -28.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail44R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, -28.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road45" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, -24.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail45L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, -24.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail45R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, -24.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Tunnel" parent="." instance=ExtResource("7")]
+position = Vector3(-32.00000000, 4.00000000, -20.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_tunnel_01"
+metadata/road_piece = true
+[node name="Road49" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, -8.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail49L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, -8.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail49R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, -8.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road50" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, -4.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail50L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, -4.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail50R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, -4.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road51" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 0.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail51L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 0.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail51R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, -0.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road52" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 4.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail52L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 4.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail52R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, 4.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road53" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 8.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail53L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 8.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail53R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, 8.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road54" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 12.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail54L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 12.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail54R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, 12.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road55" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 16.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail55L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 16.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail55R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, 16.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road56" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 20.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail56L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 20.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail56R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, 20.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road57" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 24.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail57L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 24.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail57R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, 24.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road58" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 28.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail58L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 28.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail58R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, 28.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Road59" parent="." instance=ExtResource("1")]
+position = Vector3(-32.00000000, 4.00000000, 32.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_straight_01"
+metadata/road_piece = true
+metadata/external_rails = true
+[node name="Rail59L" parent="." instance=ExtResource("6")]
+position = Vector3(-24.80000000, 4.00000000, 32.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="Rail59R" parent="." instance=ExtResource("6")]
+position = Vector3(-39.20000000, 4.00000000, 32.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_barrier_01"
+[node name="SouthCurve0" parent="." instance=ExtResource("2")]
+position = Vector3(-32.00000000, 4.00000000, 36.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "track_curve_45_01"
+metadata/road_piece = true
+[node name="SouthCurve1" parent="." instance=ExtResource("2")]
+position = Vector3(-22.62741700, 4.00000000, 58.62741700)
+rotation_degrees = Vector3(0, 225, 0)
+metadata/kit_id = "track_curve_45_01"
+metadata/road_piece = true
+[node name="SouthCurve2" parent="." instance=ExtResource("2")]
+position = Vector3(-0.00000000, 4.00000000, 68.00000000)
+rotation_degrees = Vector3(0, 270, 0)
+metadata/kit_id = "track_curve_45_01"
+metadata/road_piece = true
+[node name="SouthCurve3" parent="." instance=ExtResource("2")]
+position = Vector3(22.62741700, 4.00000000, 58.62741700)
+rotation_degrees = Vector3(0, 315, 0)
+metadata/kit_id = "track_curve_45_01"
+metadata/road_piece = true
+[node name="StartFinish" parent="." instance=ExtResource("8")]
+position = Vector3(32.00000000, 4.00000000, 36.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "track_arch_01"
+[node name="Infield" parent="." instance=ExtResource("14")]
+position = Vector3(0.00000000, 1.00000000, 0.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "environment_island_01"
+[node name="RockGarden00" parent="." instance=ExtResource("12")]
+position = Vector3(-10.00000000, 1.01500000, -25.00000000)
+rotation_degrees = Vector3(0, -20, 0)
+metadata/kit_id = "prop_deco_01"
+[node name="RockGarden01" parent="." instance=ExtResource("12")]
+position = Vector3(7.00000000, 1.01500000, -31.00000000)
+rotation_degrees = Vector3(0, 65, 0)
+metadata/kit_id = "prop_deco_01"
+[node name="RockGarden02" parent="." instance=ExtResource("12")]
+position = Vector3(-6.00000000, 1.01500000, 2.00000000)
+rotation_degrees = Vector3(0, 130, 0)
+metadata/kit_id = "prop_deco_01"
+[node name="RockGarden03" parent="." instance=ExtResource("12")]
+position = Vector3(10.00000000, 1.01500000, 18.00000000)
+rotation_degrees = Vector3(0, 35, 0)
+metadata/kit_id = "prop_deco_01"
+[node name="RockGarden04" parent="." instance=ExtResource("12")]
+position = Vector3(-8.00000000, 1.01500000, 31.00000000)
+rotation_degrees = Vector3(0, -30, 0)
+metadata/kit_id = "prop_deco_01"
+[node name="RockGarden05" parent="." instance=ExtResource("12")]
+position = Vector3(2.00000000, 1.01500000, 37.00000000)
+rotation_degrees = Vector3(0, 20, 0)
+metadata/kit_id = "prop_deco_01"
+[node name="Crates00" parent="." instance=ExtResource("13")]
+position = Vector3(10.00000000, 1.01000000, -23.00000000)
+rotation_degrees = Vector3(0, 25, 0)
+metadata/kit_id = "prop_deco_02"
+[node name="Crates01" parent="." instance=ExtResource("13")]
+position = Vector3(-9.00000000, 1.01000000, -13.00000000)
+rotation_degrees = Vector3(0, -15, 0)
+metadata/kit_id = "prop_deco_02"
+[node name="Crates02" parent="." instance=ExtResource("13")]
+position = Vector3(4.00000000, 1.01000000, -4.00000000)
+rotation_degrees = Vector3(0, 12, 0)
+metadata/kit_id = "prop_deco_02"
+[node name="Crates03" parent="." instance=ExtResource("13")]
+position = Vector3(-3.00000000, 1.01000000, 17.00000000)
+rotation_degrees = Vector3(0, 30, 0)
+metadata/kit_id = "prop_deco_02"
+[node name="Crates04" parent="." instance=ExtResource("13")]
+position = Vector3(9.00000000, 1.01000000, 30.00000000)
+rotation_degrees = Vector3(0, -35, 0)
+metadata/kit_id = "prop_deco_02"
+[node name="Banner00" parent="." instance=ExtResource("11")]
+position = Vector3(-13.00000000, 1.00000000, -24.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "prop_banner_01"
+[node name="Banner01" parent="." instance=ExtResource("11")]
+position = Vector3(13.00000000, 1.00000000, -16.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "prop_banner_01"
+[node name="Banner02" parent="." instance=ExtResource("11")]
+position = Vector3(-12.00000000, 1.00000000, 20.00000000)
+rotation_degrees = Vector3(0, 180, 0)
+metadata/kit_id = "prop_banner_01"
+[node name="Banner03" parent="." instance=ExtResource("11")]
+position = Vector3(12.00000000, 1.00000000, 26.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "prop_banner_01"
+[node name="Banner04" parent="." instance=ExtResource("11")]
+position = Vector3(0.00000000, 1.00000000, -37.00000000)
+rotation_degrees = Vector3(0, 90, 0)
+metadata/kit_id = "prop_banner_01"
+[node name="Banner05" parent="." instance=ExtResource("11")]
+position = Vector3(0.00000000, 1.00000000, 39.00000000)
+rotation_degrees = Vector3(0, -90, 0)
+metadata/kit_id = "prop_banner_01"
+[node name="LandingBanner0" parent="." instance=ExtResource("11")]
+position = Vector3(24.80000000, 5.10000000, -14.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "prop_banner_01"
+[node name="LandingBanner1" parent="." instance=ExtResource("11")]
+position = Vector3(39.20000000, 5.10000000, -14.00000000)
+rotation_degrees = Vector3(0, 0, 0)
+metadata/kit_id = "prop_banner_01"
