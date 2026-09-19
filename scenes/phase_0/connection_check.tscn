@@ -1,0 +1,87 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/phase_0/pipeline_test.glb" id="1_mesh"]
+[ext_resource type="Script" path="res://tools/phase_0/connection_check.gd" id="2_check"]
+[ext_resource type="Resource" path="res://resources/handling/default_handling.tres" id="3_handling"]
+
+[sub_resource type="Environment" id="Environment_check"]
+background_mode = 1
+background_color = Color(0.035, 0.055, 0.085, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.65, 0.75, 0.9, 1)
+ambient_light_energy = 0.65
+reflected_light_source = 2
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.13, 0.18, 0.23, 1)
+roughness = 1.0
+
+[sub_resource type="PlaneMesh" id="Mesh_floor"]
+material = SubResource("Material_floor")
+size = Vector2(8, 8)
+
+[sub_resource type="StyleBoxFlat" id="Style_panel"]
+bg_color = Color(0.045, 0.07, 0.105, 0.95)
+border_width_left = 4
+border_color = Color(0.17, 0.78, 0.8, 1)
+
+[node name="Phase0ConnectionCheck" type="Node3D"]
+script = ExtResource("2_check")
+handling = ExtResource("3_handling")
+
+[node name="BlenderExport" parent="." instance=ExtResource("1_mesh")]
+position = Vector3(0, 0.25, 0)
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh_floor")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_check")
+
+[node name="KeyLight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-50, -30, 0)
+light_energy = 1.4
+shadow_enabled = true
+
+[node name="InspectionCamera" type="Camera3D" parent="."]
+position = Vector3(3, 2.7, 4.5)
+rotation_degrees = Vector3(-24, 33.69, 0)
+current = true
+fov = 55.0
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="PanelContainer" parent="HUD"]
+offset_left = 28.0
+offset_top = 28.0
+offset_right = 760.0
+offset_bottom = 176.0
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="Margin" type="MarginContainer" parent="HUD/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 16
+
+[node name="Rows" type="VBoxContainer" parent="HUD/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="HUD/Panel/Margin/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "NODEKINS RACING  /  PHASE 0"
+
+[node name="Status" type="Label" parent="HUD/Panel/Margin/Rows"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.92, 0.78, 1)
+theme_override_font_sizes/font_size = 20
+text = "Checking asset pipeline..."
+
+[node name="Detail" type="Label" parent="HUD/Panel/Margin/Rows"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.76, 0.84, 1)
+text = "12-triangle Blender test mesh  |  Desktop Forward+  |  Setup only"

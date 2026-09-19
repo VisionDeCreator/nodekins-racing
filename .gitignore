@@ -1,0 +1,14 @@
+# Godot 4+ specific ignores
+.godot/
+
+# Generated builds, diagnostics and local credentials.
+/builds/
+/artifacts/
+.DS_Store
+*.log
+*.tmp
+*.blend1
+*.blend2
+*.p12
+.env
+.env.*
