@@ -1,6 +1,8 @@
 class_name KartInventory
 extends Node
 signal changed
+signal item_used(item: ItemDefinition)
+signal item_hit(item: ItemDefinition)
 var system: RaceItems
 var racer_id: StringName
 var cpu_controlled: bool = false
@@ -44,6 +46,7 @@ func use_item() -> void:
 		held_seconds = 0.0
 		changed.emit()
 		system.record("use", {"racer": str(racer_id), "item": str(item.id), "speed": kart.speed})
+		item_used.emit(item)
 
 func take_hit(source: StringName, item: ItemDefinition, effect: DeployItemEffect) -> bool:
 	if not can_act() or immunity_remaining > 0.0:
@@ -54,6 +57,7 @@ func take_hit(source: StringName, item: ItemDefinition, effect: DeployItemEffect
 	immunity_remaining = effect.hit_duration + effect.immunity_duration
 	system.record("hit", {"racer": str(source), "target": str(racer_id), "item": str(item.id), "speed_before": before, "spin_seconds": effect.hit_duration})
 	changed.emit()
+	item_hit.emit(item)
 	return true
 
 func find_target(max_distance: float, cone_degrees: float) -> KartInventory:

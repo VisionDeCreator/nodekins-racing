@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Nodekins Racing"
 run/main_scene="res://scenes/ui/Main.tscn"
-config/version="0.6.5"
+config/version="0.7.0"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -84,6 +84,8 @@ kart_item={
 }
 
 [autoload]
+
+AudioPreferences="*res://scripts/audio/audio_preferences.gd"
 
 RaceManager="*res://scripts/race/race_manager.gd"
 GameSession="*res://scripts/ui/menu/game_session.gd"

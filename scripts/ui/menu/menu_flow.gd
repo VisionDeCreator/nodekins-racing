@@ -24,10 +24,12 @@ var _custom_registry: PartsRegistry
 var _custom_values: Dictionary = {}
 var _save_status: Label
 var _deployed: bool = false
+var audio_options: AudioOptions
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_canvas = CanvasLayer.new()
+	_canvas.name = "InterfaceLayer"
 	_canvas.layer = 20
 	add_child(_canvas)
 	_ui = Control.new()
@@ -154,7 +156,7 @@ func show_title() -> void:
 	var lower := HBoxContainer.new()
 	left.add_child(lower)
 	_button(lower,&"options","Options",show_options)
-	_button(lower,&"quit","Quit",get_tree().quit)
+	_button(lower,&"quit","Quit",$MenuAudio.request_quit)
 	_spacer(left)
 	var right: VBoxContainer = _column(_body,1.1)
 	_add_preview(right,true)
@@ -164,18 +166,23 @@ func show_title() -> void:
 	_focus(&"play")
 
 func show_options() -> void:
-	_shell("NODEKINS / OPTIONS","Options","A place for the settings to come.")
-	var left: VBoxContainer = _column(_body)
+	_shell("NODEKINS / OPTIONS","Options","Set the mix that feels right for you.")
+	var left: VBoxContainer = _column(_body,1.15)
 	_spacer(left)
-	left.add_child(RacingUISkin.label("You're ready to race.",34))
-	left.add_child(RacingUISkin.paragraph("Audio, display and control settings will arrive in a later update.",23))
-	left.add_child(RacingUISkin.paragraph("Keyboard: WASD / arrows to drive · Space to drift\nE to use an item · R to recover · Esc to pause\n\nGamepad: left stick · RT accelerate · LT brake\nA drift · X item · Y recover · Start pause",20))
+	left.add_child(RacingUISkin.label("Audio",30))
+	audio_options = AudioOptions.new()
+	left.add_child(audio_options)
+	left.add_child(RacingUISkin.paragraph("Left / right or drag to adjust · Up / down to change bus",16))
+	left.add_child(RacingUISkin.paragraph("WASD / arrows: drive · Space: drift · E: item
+Gamepad: left stick · RT / LT · A: drift · X: item
+Esc / Start: pause · R / Y: recover",17))
 	_spacer(left)
 	_button(left,&"back","←  Main Menu",show_title,true)
-	_add_preview(_column(_body),true)
+	_add_preview(_column(_body,.85),true)
 	_footer()
 	_set_screen(&"options")
 	_focus(&"back")
+	audio_options.configure_focus(buttons[&"back"])
 
 func show_characters() -> void:
 	_shell("01 / DRIVER     →     02 / TRACK     →     03 / RACE","Make it yours","Pick your driver, then tune your look. Every choice is cosmetic.")

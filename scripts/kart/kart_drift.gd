@@ -3,6 +3,9 @@ extends Node
 ## Owns drift charging and boost lifetime. It never moves the body or reads device input.
 
 signal boost_started(tier: int, multiplier: float, duration: float)
+signal drift_started
+signal drift_ended
+signal charge_tier_changed(value: int)
 
 var stats: KartHandling
 var drifting: bool = false
@@ -37,12 +40,16 @@ func step(delta: float, controls: KartInput, grounded: bool, speed: float) -> vo
 		if steer_angle > stats.drift_steer_threshold_degrees:
 			drifting = true
 			direction = signf(controls.steering)
+			drift_started.emit()
 	if drifting:
+		var previous_tier: int = tier
 		charge_time = minf(charge_time + delta, stats.mini_turbo_thresholds[2])
 		tier = 0
 		for index in range(3):
 			if charge_time + 0.00001 >= stats.mini_turbo_thresholds[index]:
 				tier = index + 1
+		if tier != previous_tier:
+			charge_tier_changed.emit(tier)
 
 ## Shared boost path for earned turbos and items. Strongest/longest wins; no multiplication.
 func activate_boost(multiplier: float, duration: float, tier_hint: int = 3) -> void:
@@ -69,7 +76,10 @@ func reset() -> void:
 	boost_duration = 0.0
 
 func _cancel_drift() -> void:
+	var was_drifting: bool = drifting
 	drifting = false
 	direction = 0.0
 	charge_time = 0.0
 	tier = 0
+	if was_drifting:
+		drift_ended.emit()

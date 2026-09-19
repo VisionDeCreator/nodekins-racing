@@ -1,0 +1,69 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://scripts/audio/kart_audio.gd" id="root"]
+[ext_resource type="Script" path="res://scripts/audio/sound_3d.gd" id="sound"]
+[node name="Audio" type="Node3D"]
+script = ExtResource("root")
+
+[node name="Engine" type="AudioStreamPlayer3D" parent="."]
+script = ExtResource("sound")
+bus = &"Engine"
+unit_size = 6.0
+max_db = 0.0
+max_distance = 45.0
+max_polyphony = 1
+
+[node name="Charge" type="AudioStreamPlayer3D" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+unit_size = 6.0
+max_db = 0.0
+max_distance = 45.0
+max_polyphony = 1
+
+[node name="Movement" type="AudioStreamPlayer3D" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+unit_size = 6.0
+max_db = 0.0
+max_distance = 45.0
+max_polyphony = 3
+
+[node name="Boost" type="AudioStreamPlayer3D" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+unit_size = 6.0
+max_db = 0.0
+max_distance = 45.0
+max_polyphony = 3
+
+[node name="Glide" type="AudioStreamPlayer3D" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+unit_size = 6.0
+max_db = 0.0
+max_distance = 45.0
+max_polyphony = 3
+
+[node name="Impact" type="AudioStreamPlayer3D" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+unit_size = 6.0
+max_db = 0.0
+max_distance = 45.0
+max_polyphony = 3
+
+[node name="Item" type="AudioStreamPlayer3D" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+unit_size = 6.0
+max_db = 0.0
+max_distance = 45.0
+max_polyphony = 3
+
+[node name="Hit" type="AudioStreamPlayer3D" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+unit_size = 6.0
+max_db = 0.0
+max_distance = 45.0
+max_polyphony = 3

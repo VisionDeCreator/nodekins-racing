@@ -1,4 +1,7 @@
 [gd_scene format=3]
 [ext_resource type="Script" path="res://scripts/ui/menu/menu_flow.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/audio/MenuAudio.tscn" id="audio"]
 [node name="NodekinsRacing" type="Node"]
 script = ExtResource("1")
+
+[node name="MenuAudio" parent="." instance=ExtResource("audio")]

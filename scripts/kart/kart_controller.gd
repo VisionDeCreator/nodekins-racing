@@ -4,6 +4,9 @@ extends CharacterBody3D
 
 signal respawned
 signal stats_changed(value: KartHandling)
+## Read-only presentation telemetry, emitted after the existing movement step.
+signal motion_updated(current_speed: float, throttle: float, brake: float)
+signal collision_impact(normal_speed: float)
 ## Optional external recovery owner. Without a subscriber, Phase 1's local reset remains.
 signal recovery_requested(reason: String)
 
@@ -58,6 +61,7 @@ func _physics_process(delta: float) -> void:
 	var speed_fraction: float = clampf(speed / stats.top_speed, 0.0, 1.0)
 	var steering_scale: float = stats.steering_speed_curve.sample_baked(speed_fraction)
 	turn_rate_degrees = stats.low_speed_turn_rate * steering_scale * minf(speed / stats.full_steering_speed, 1.0)
+	var incoming_velocity: Vector3 = velocity
 	if glide.active:
 		glide.step(delta)
 	else:
@@ -73,12 +77,18 @@ func _physics_process(delta: float) -> void:
 			velocity.y -= stats.gravity * delta
 		velocity.x = _travel_direction.x * speed
 		velocity.z = _travel_direction.z * speed
+		incoming_velocity = velocity
 		move_and_slide()
 	# Feed collision-clipped velocity back into the next tick; no stored wall-speed boost.
 	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
 	speed = horizontal_velocity.length()
 	if speed > 0.01:
 		_travel_direction = horizontal_velocity / speed
+	motion_updated.emit(speed, controls.throttle, controls.brake)
+	for index in range(get_slide_collision_count()):
+		var contact: KinematicCollision3D = get_slide_collision(index)
+		if absf(contact.get_normal().dot(Vector3.UP)) < 0.7:
+			collision_impact.emit(maxf(0.0, -(incoming_velocity - contact.get_collider_velocity()).dot(contact.get_normal())))
 
 func _update_speed(delta: float) -> void:
 	if controls.brake > 0.0:
@@ -122,3 +132,4 @@ func respawn_at(destination: Transform3D) -> void:
 	controls.reset_smoothing()
 	reset_physics_interpolation()
 	respawned.emit()
+	motion_updated.emit(0.0, 0.0, 1.0)

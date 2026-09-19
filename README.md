@@ -1,11 +1,13 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 6.5 customization. Choose kart parts, paint, body, hair, eyes,
-clothes and skin tone in the garage, with live previews and automatic local saving.
-The same 13-byte, ID-only profile appears in menus, races and results.
-Launch into Title → Driver / Customization → Track Select → Countdown → Race → Results.
-See `docs/phase_6_5.md` for the profile contract, registries and customization verification,
+Current milestone: Phase 7 audio. The complete menu/race/results flow now has original
+placeholder music, spatial engine loops, drift/boost/glide/impact and item sounds,
+countdown/lap cues and placement-dependent results jingles. Options controls and
+saves separate Music, SFX and Engine volumes. Full kart/character customization
+continues to use its persistent 13-byte ID-only profile.
+See `docs/phase_7.md` for audio ownership, triggers and recorded verification,
+`docs/phase_6_5.md` for the profile contract, registries and customization verification,
 `docs/phase_6.md` for the flow, selection catalog and verification,
 `docs/phase_5c.md` for kit exports, snapping conventions and race verification,
 `docs/phase_5b.md` for character assets, poses and validation,
@@ -30,7 +32,8 @@ male/female body, then Customize Character or Customize Kart. Choose parts with 
 carousels and colors with palette swatches. Show Glider previews the deployed wing.
 Continue to Skyline Loop (the existing Loop 01), then Start Race.
 Menus support arrows/Tab, D-pad/left stick, Enter/A and mouse; Esc/B goes back.
-Options is a placeholder. The 3–2–1–GO countdown
+Options provides Music, SFX and Engine sliders; 0% mutes a bus. All audio assets are
+self-generated placeholders pending a human listen-through. The 3–2–1–GO countdown
 locks all four karts; pass CP1–CP7 and start/finish in order for three laps.
 Esc/Enter/gamepad Start pauses; Resume, Choose Track and Main Menu are available.
 Results show the full field, with Race Again and Main Menu buttons. The flat Phase 1 driving lab remains at `scenes/test/TestPlane.tscn`.
@@ -87,6 +90,13 @@ development. Distribution signing and notarization are not part of Phase 0.
 
 | Location | Purpose |
 | --- | --- |
+| `scenes/audio/` | Object-owned kart, track and menu audio players |
+| `scripts/audio/` | Signal listeners, volume preferences, Options controls and clean shutdown |
+| `assets/audio/` | 23 original placeholder WAVs and provenance/loop manifest |
+| `default_bus_layout.tres` | Music, SFX, Engine and Master limiter |
+| `tools/phase_7/` | Deterministic synthesis, full-flow audio verification and PCM analysis |
+| `scenes/test/AudioVerification.tscn` | Full physical race with cue assertions and actual mix recording |
+| `docs/phase_7.md` | Event-to-sound map, placeholder status, verification and listen-through |
 | `scenes/ui/Main.tscn` | Current main scene: complete title-to-race-to-results flow |
 | `scripts/ui/menu/` | Screen flow, live previews, shared theme, HUD and minimap |
 | `resources/ui/default_catalog.tres` | Track entries and legacy driver defaults |

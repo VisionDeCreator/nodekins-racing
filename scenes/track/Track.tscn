@@ -1,4 +1,5 @@
 [gd_scene format=3]
+[ext_resource type="PackedScene" path="res://scenes/audio/RaceAudio.tscn" id="audio"]
 
 [ext_resource type="Script" path="res://scripts/race/graybox_track.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/tracks/oval.tres" id="2"]
@@ -58,3 +59,5 @@ projection = 1
 size = 130.0
 far = 600.0
 current = false
+
+[node name="RaceAudio" parent="." instance=ExtResource("audio")]

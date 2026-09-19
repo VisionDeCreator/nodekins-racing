@@ -10,6 +10,7 @@ extends Resource
 @export var back_weight: float = 1.0
 @export var cpu_delay: float = 0.8
 @export var effect: ItemEffect
+@export var use_sound: AudioStream
 
 func weight_for(position: int, racer_count: int) -> float:
 	var fraction: float = float(maxi(0, position - 1)) / maxi(1, racer_count - 1)

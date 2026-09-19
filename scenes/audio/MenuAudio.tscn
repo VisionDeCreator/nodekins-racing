@@ -1,0 +1,20 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://scripts/audio/menu_audio.gd" id="root"]
+[ext_resource type="Script" path="res://scripts/audio/sound_2d.gd" id="sound"]
+[ext_resource type="AudioStream" path="res://assets/audio/menu_loop.wav" id="music"]
+[ext_resource type="Script" path="res://scripts/audio/music_player.gd" id="loop"]
+[node name="MenuAudio" type="Node"]
+script = ExtResource("root")
+[node name="Music" type="AudioStreamPlayer" parent="."]
+script = ExtResource("loop")
+stream = ExtResource("music")
+bus = &"Music"
+volume_db = -12.0
+[node name="Navigation" type="AudioStreamPlayer" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+volume_db = -15.0
+[node name="Result" type="AudioStreamPlayer" parent="."]
+script = ExtResource("sound")
+bus = &"SFX"
+volume_db = -8.0

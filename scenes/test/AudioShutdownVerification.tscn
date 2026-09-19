@@ -1,0 +1,6 @@
+[gd_scene format=3]
+[ext_resource type="PackedScene" path="res://scenes/ui/Main.tscn" id="app"]
+[ext_resource type="Script" path="res://tools/phase_7/verify_audio_shutdown.gd" id="qa"]
+[node name="AudioShutdownVerification" type="Node"]
+script = ExtResource("qa")
+[node name="App" parent="." instance=ExtResource("app")]

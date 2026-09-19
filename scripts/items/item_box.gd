@@ -1,5 +1,6 @@
 class_name ItemBox
 extends Area3D
+signal picked_up
 var system: RaceItems
 var cooldown: float = 0.0
 @onready var visual: Node3D = $Visual
@@ -22,6 +23,7 @@ func _physics_process(delta: float) -> void:
 			cooldown = system.box_respawn_seconds
 			visual.hide()
 			system.record("pickup", {"racer": str(inventory.racer_id), "item": str(item.id), "position": state.position, "box": str(name)})
+			picked_up.emit()
 			break
 
 func reset() -> void:
