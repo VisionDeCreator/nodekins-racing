@@ -1,0 +1,221 @@
+[gd_resource type="Resource" script_class="PartsRegistry" format=3]
+[ext_resource type="Script" path="res://scripts/customization/parts_registry.gd" id="registry"]
+[ext_resource type="Script" path="res://scripts/customization/slot_definition.gd" id="slot"]
+[ext_resource type="Script" path="res://scripts/customization/part_definition.gd" id="part"]
+[ext_resource type="PackedScene" path="res://assets/karts/kart_01.glb" id="kart"]
+[ext_resource type="PackedScene" path="res://assets/customization/kart_variants.glb" id="variants"]
+[ext_resource type="PackedScene" path="res://assets/characters/char_body_male.glb" id="male"]
+[ext_resource type="PackedScene" path="res://assets/characters/char_body_female.glb" id="female"]
+[ext_resource type="PackedScene" path="res://assets/characters/char_appearance_parts.glb" id="clothes"]
+[ext_resource type="PackedScene" path="res://assets/customization/character_variants.glb" id="hair"]
+[ext_resource type="Shader" path="res://assets/karts/kart_paint.gdshader" id="shader_paint"]
+[ext_resource type="Shader" path="res://assets/characters/skin_tint.gdshader" id="shader_skin"]
+[ext_resource type="Shader" path="res://assets/customization/eye_tint.gdshader" id="shader_eye"]
+[sub_resource type="ShaderMaterial" id="mat_paint"]
+shader = ExtResource("shader_paint")
+[sub_resource type="ShaderMaterial" id="mat_wing"]
+shader = ExtResource("shader_paint")
+shader_parameter/neutralize_base = true
+[sub_resource type="ShaderMaterial" id="mat_skin"]
+shader = ExtResource("shader_skin")
+[sub_resource type="ShaderMaterial" id="mat_eye0"]
+shader = ExtResource("shader_eye")
+shader_parameter/eye_color = Color(0.08235294117647059, 0.5372549019607843, 0.7215686274509804, 1)
+[sub_resource type="ShaderMaterial" id="mat_eye1"]
+shader = ExtResource("shader_eye")
+shader_parameter/eye_color = Color(0.27450980392156865, 0.5882352941176471, 0.35294117647058826, 1)
+[sub_resource type="ShaderMaterial" id="mat_eye2"]
+shader = ExtResource("shader_eye")
+shader_parameter/eye_color = Color(0.5843137254901961, 0.3607843137254902, 0.1607843137254902, 1)
+[sub_resource type="Resource" id="body_type_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Male"
+asset = ExtResource("male")
+material = SubResource("mat_skin")
+mesh_name = &"char_body_male"
+tint_source = &"skin_tone_id"
+tint_uniform = &"skin_tone"
+legacy_key = &"char_body_male"
+[sub_resource type="Resource" id="body_type_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Female"
+asset = ExtResource("female")
+material = SubResource("mat_skin")
+mesh_name = &"char_body_female"
+tint_source = &"skin_tone_id"
+tint_uniform = &"skin_tone"
+legacy_key = &"char_body_female"
+[sub_resource type="Resource" id="slot_body_type_id"]
+script = ExtResource("slot")
+field = &"body_type_id"
+display_name = "Body type"
+is_palette = false
+entries = Array[ExtResource("part")]([SubResource("body_type_id_0"), SubResource("body_type_id_1")])
+[sub_resource type="Resource" id="hair_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Quiff"
+asset = ExtResource("clothes")
+mesh_name = &"char_hair_01"
+legacy_key = &"char_hair_01"
+[sub_resource type="Resource" id="hair_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Bob"
+asset = ExtResource("clothes")
+mesh_name = &"char_hair_02"
+legacy_key = &"char_hair_02"
+[sub_resource type="Resource" id="hair_id_2"]
+script = ExtResource("part")
+id = 2
+display_name = "Mohawk"
+asset = ExtResource("hair")
+mesh_name = &"char_hair_03"
+legacy_key = &"char_hair_03"
+[sub_resource type="Resource" id="slot_hair_id"]
+script = ExtResource("slot")
+field = &"hair_id"
+display_name = "Hair"
+is_palette = false
+entries = Array[ExtResource("part")]([SubResource("hair_id_0"), SubResource("hair_id_1"), SubResource("hair_id_2")])
+[sub_resource type="Resource" id="eye_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Sapphire"
+asset = ExtResource("clothes")
+material = SubResource("mat_eye0")
+mesh_name = &"char_eyes_01"
+legacy_key = &"char_eyes_01"
+color = Color(0.08235294117647059, 0.5372549019607843, 0.7215686274509804, 1)
+[sub_resource type="Resource" id="eye_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Emerald"
+asset = ExtResource("clothes")
+material = SubResource("mat_eye1")
+mesh_name = &"char_eyes_01"
+legacy_key = &"char_eyes_02"
+color = Color(0.27450980392156865, 0.5882352941176471, 0.35294117647058826, 1)
+[sub_resource type="Resource" id="eye_id_2"]
+script = ExtResource("part")
+id = 2
+display_name = "Hazel"
+asset = ExtResource("clothes")
+material = SubResource("mat_eye2")
+mesh_name = &"char_eyes_01"
+legacy_key = &"char_eyes_03"
+color = Color(0.5843137254901961, 0.3607843137254902, 0.1607843137254902, 1)
+[sub_resource type="Resource" id="slot_eye_id"]
+script = ExtResource("slot")
+field = &"eye_id"
+display_name = "Eyes"
+is_palette = false
+entries = Array[ExtResource("part")]([SubResource("eye_id_0"), SubResource("eye_id_1"), SubResource("eye_id_2")])
+[sub_resource type="Resource" id="shirt_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Striped tee"
+asset = ExtResource("clothes")
+mesh_name = &"char_shirt_01"
+legacy_key = &"char_shirt_01"
+[sub_resource type="Resource" id="shirt_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Zip jacket"
+asset = ExtResource("clothes")
+mesh_name = &"char_shirt_02"
+legacy_key = &"char_shirt_02"
+[sub_resource type="Resource" id="slot_shirt_id"]
+script = ExtResource("slot")
+field = &"shirt_id"
+display_name = "Shirt"
+is_palette = false
+entries = Array[ExtResource("part")]([SubResource("shirt_id_0"), SubResource("shirt_id_1")])
+[sub_resource type="Resource" id="pants_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Shorts"
+asset = ExtResource("clothes")
+mesh_name = &"char_pants_01"
+legacy_key = &"char_pants_01"
+[sub_resource type="Resource" id="pants_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Trousers"
+asset = ExtResource("clothes")
+mesh_name = &"char_pants_02"
+legacy_key = &"char_pants_02"
+[sub_resource type="Resource" id="slot_pants_id"]
+script = ExtResource("slot")
+field = &"pants_id"
+display_name = "Pants"
+is_palette = false
+entries = Array[ExtResource("part")]([SubResource("pants_id_0"), SubResource("pants_id_1")])
+[sub_resource type="Resource" id="shoe_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Trainers"
+asset = ExtResource("clothes")
+mesh_name = &"char_shoes_01"
+legacy_key = &"char_shoes_01"
+[sub_resource type="Resource" id="shoe_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Boots"
+asset = ExtResource("clothes")
+mesh_name = &"char_shoes_02"
+legacy_key = &"char_shoes_02"
+[sub_resource type="Resource" id="slot_shoe_id"]
+script = ExtResource("slot")
+field = &"shoe_id"
+display_name = "Shoes"
+is_palette = false
+entries = Array[ExtResource("part")]([SubResource("shoe_id_0"), SubResource("shoe_id_1")])
+[sub_resource type="Resource" id="skin_tone_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Amber"
+legacy_key = &"warm_01"
+color = Color(0.7254901960784313, 0.47058823529411764, 0.3176470588235294, 1)
+[sub_resource type="Resource" id="skin_tone_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Warm"
+legacy_key = &"warm_02"
+color = Color(0.8941176470588236, 0.6862745098039216, 0.5098039215686274, 1)
+[sub_resource type="Resource" id="skin_tone_id_2"]
+script = ExtResource("part")
+id = 2
+display_name = "Porcelain"
+legacy_key = &"light_01"
+color = Color(0.9490196078431372, 0.8196078431372549, 0.7098039215686275, 1)
+[sub_resource type="Resource" id="skin_tone_id_3"]
+script = ExtResource("part")
+id = 3
+display_name = "Bronze"
+legacy_key = &"brown_01"
+color = Color(0.5882352941176471, 0.3607843137254902, 0.23921568627450981, 1)
+[sub_resource type="Resource" id="skin_tone_id_4"]
+script = ExtResource("part")
+id = 4
+display_name = "Umber"
+legacy_key = &"deep_01"
+color = Color(0.47058823529411764, 0.29411764705882354, 0.2196078431372549, 1)
+[sub_resource type="Resource" id="skin_tone_id_5"]
+script = ExtResource("part")
+id = 5
+display_name = "Deep"
+legacy_key = &"deep_02"
+color = Color(0.28627450980392155, 0.18823529411764706, 0.1607843137254902, 1)
+[sub_resource type="Resource" id="slot_skin_tone_id"]
+script = ExtResource("slot")
+field = &"skin_tone_id"
+display_name = "Skin tone"
+is_palette = true
+entries = Array[ExtResource("part")]([SubResource("skin_tone_id_0"), SubResource("skin_tone_id_1"), SubResource("skin_tone_id_2"), SubResource("skin_tone_id_3"), SubResource("skin_tone_id_4"), SubResource("skin_tone_id_5")])
+[resource]
+script = ExtResource("registry")
+display_name = "Character"
+slots = Array[ExtResource("slot")]([SubResource("slot_body_type_id"), SubResource("slot_hair_id"), SubResource("slot_eye_id"), SubResource("slot_shirt_id"), SubResource("slot_pants_id"), SubResource("slot_shoe_id"), SubResource("slot_skin_tone_id")])

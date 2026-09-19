@@ -1,11 +1,12 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 6 UI/UX. Launch into Title → Character Select → Track Select
-→ Countdown → Race → Results, with keyboard/gamepad/mouse navigation, live character
-previews, a race HUD/minimap, pause/exit controls and replay flow. Full customization
-remains deferred to Phase 6.5.
-See `docs/phase_6.md` for the flow, selection catalog and verification,
+Current milestone: Phase 6.5 customization. Choose kart parts, paint, body, hair, eyes,
+clothes and skin tone in the garage, with live previews and automatic local saving.
+The same 13-byte, ID-only profile appears in menus, races and results.
+Launch into Title → Driver / Customization → Track Select → Countdown → Race → Results.
+See `docs/phase_6_5.md` for the profile contract, registries and customization verification,
+`docs/phase_6.md` for the flow, selection catalog and verification,
 `docs/phase_5c.md` for kit exports, snapping conventions and race verification,
 `docs/phase_5b.md` for character assets, poses and validation,
 `docs/phase_5a.md` for kart assets, sockets and materials,
@@ -25,7 +26,9 @@ export templates. Older versions have not been validated.
 ## Run
 
 Open `project.godot` in Godot and press **F5** for the title screen. Choose Play, a
-male/female default, and Skyline Loop (the existing Loop 01), then Start Race.
+male/female body, then Customize Character or Customize Kart. Choose parts with the
+carousels and colors with palette swatches. Show Glider previews the deployed wing.
+Continue to Skyline Loop (the existing Loop 01), then Start Race.
 Menus support arrows/Tab, D-pad/left stick, Enter/A and mouse; Esc/B goes back.
 Options is a placeholder. The 3–2–1–GO countdown
 locks all four karts; pass CP1–CP7 and start/finish in order for three laps.
@@ -48,12 +51,15 @@ For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
 godot --headless --editor --path . --import --quit
-godot --headless --fixed-fps 60 --path . res://scenes/test/UIFlowVerification.tscn -- --phase6-check
+godot --headless --fixed-fps 60 --path . res://scenes/test/CustomizationVerification.tscn -- --phase65-check
+godot --headless --path . res://scenes/test/CustomizationRestartVerification.tscn -- --phase65-check
 ```
 
-Run the UI verification scene without `--headless` or `--fixed-fps 60` to capture
-all menu screens, the live HUD and results in `artifacts/phase_6/`. It navigates
-through actual UI input events and drives two complete races with a QA player pilot.
+Run the customization verification scene without `--headless` or `--fixed-fps 60`
+to capture previews, the customized kart on track, the live HUD and results in
+`artifacts/phase_6_5/`. It uses actual UI input events and a QA player pilot for a
+complete race. Run the restart scene as a separate process afterwards. Both use
+an isolated test save, leaving the real player profile untouched.
 The normal main scene always leaves driving under human control.
 Historical verification scenes remain under `scenes/test/`.
 On this Mac the engine executable is `/Applications/Godot.app/Contents/MacOS/Godot`.
@@ -83,7 +89,13 @@ development. Distribution signing and notarization are not part of Phase 0.
 | --- | --- |
 | `scenes/ui/Main.tscn` | Current main scene: complete title-to-race-to-results flow |
 | `scripts/ui/menu/` | Screen flow, live previews, shared theme, HUD and minimap |
-| `resources/ui/default_catalog.tres` | ID-based driver/track entries for selection |
+| `resources/ui/default_catalog.tres` | Track entries and legacy driver defaults |
+| `resources/customization/` | Shared kart/character registries, IDs, palettes and material templates |
+| `scripts/customization/` | Thirteen-byte profile, validation, atomic save/load and kart assembly |
+| `assets/customization/` | Original alternate kart parts, mohawk and iris tint shader |
+| `source_assets/phase_6_5/customization_01.blend` | Editable Blender variant source |
+| `scenes/test/CustomizationVerification.tscn` | Registry/rig/save audit, UI choices and complete race |
+| `scenes/test/CustomizationRestartVerification.tscn` | Separate-process save restoration check |
 | `scenes/test/UIFlowVerification.tscn` | UI input navigation, two full races, HUD/results/cleanup checks |
 | `scenes/track/Track.tscn` | Standalone race scene: player + three CPUs, three laps |
 | `assets/track_kit/*.glb` | Fourteen original Blender track/environment assets |
@@ -94,7 +106,7 @@ development. Distribution signing and notarization are not part of Phase 0.
 | `scenes/test/TrackArtVerification.tscn` | Pre-art geometry, seam and deterministic race comparison |
 | `scenes/test/BoostPadVerification.tscn` | Full race with pads, crossing/lock/boost stacking checks |
 | `assets/characters/*.glb` | Two compatible body rigs and one shared appearance-part library |
-| `resources/characters/` | Compact ID-based looks and male/female defaults |
+| `resources/characters/` | Legacy named character defaults, adapted through the integer registry |
 | `scenes/characters/` | Reusable character assembler and visual-only kart rider |
 | `source_assets/phase_5b/characters_01.blend` | Versioned editable character source |
 | `scenes/test/CharacterGallery.tscn` | Default outfits, idle/victory and shared-rig verification |
@@ -151,13 +163,12 @@ with gray-box geometry before the art phase.
 
 ## Build order and design intent
 
-Phase 0 setup → movement → track/laps → AI racers → items → glide → art → UI → audio →
-customization → online multiplayer → polish. Each phase ends in an in-engine verified
+Phase 0 setup → movement → track/laps → AI racers → items → glide → art → UI → customization →
+audio → online multiplayer → polish. Each phase ends in an in-engine verified
 result before the next begins. Design and balance specifications come from the user
 and their design co-pilot; provisional values must be identified.
 
-Future multiplayer is client-server online racing. Customization profiles will be compact,
-versioned, ID-based data covering kart parts/colors and hair, eyes, shirt, pants, shoes,
+Future multiplayer is client-server online racing. Customization profiles are compact,
+versioned, integer ID-based data covering kart parts/colors and hair, eyes, shirt, pants, shoes,
 and skin tone. Profile IDs resolve to local assets; network payloads must not contain
-asset paths. Racers must see each other's profiles. Networking and customization
-implementation are deferred to their phases. Optional split-screen does not drive the architecture.
+asset paths. Racers must see each other's profiles. Networking implementation remains deferred to Phase 8. Optional split-screen does not drive the architecture.

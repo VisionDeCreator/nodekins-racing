@@ -14,6 +14,20 @@ var glider_socket: Node3D
 var _material: ShaderMaterial
 var _spoiler_material: ShaderMaterial
 var _trail_material: StandardMaterial3D
+var customization_profile: CustomizationProfile
+var fitted_parts: Dictionary = {}
+
+func apply_profile(profile: CustomizationProfile) -> void:
+	if not KartPartsAssembler.LIBRARY.accepts(profile):
+		return
+	customization_profile = profile.duplicate() as CustomizationProfile
+	fitted_parts = KartPartsAssembler.apply(assembly,profile,glider_socket)
+	body = fitted_parts[&"chassis_id"][0]
+	spoiler = fitted_parts[&"spoiler_id"][0]
+	_material = body.material_override as ShaderMaterial
+	_spoiler_material = spoiler.material_override as ShaderMaterial
+	paint_color = KartPartsAssembler.LIBRARY.tint(profile,&"primary_color")
+	$Rider.set_profile(profile)
 
 func _ready() -> void:
 	_material = ShaderMaterial.new()

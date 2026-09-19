@@ -20,6 +20,10 @@ var _preview_name: Label
 var _features: Label
 var _map: RaceTrackMap
 var _changing: bool = false
+var _custom_registry: PartsRegistry
+var _custom_values: Dictionary = {}
+var _save_status: Label
+var _deployed: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -125,7 +129,7 @@ func _focus(id: StringName) -> void:
 func _add_preview(parent: Node, seated: bool = false, pose: StringName = &"Idle") -> void:
 	preview = DriverPreview.new()
 	parent.add_child(preview)
-	preview.show_driver(GameSession.character().look,seated,pose)
+	preview.show_profile(GameSession.profile,seated,pose)
 
 func _dispose_race() -> void:
 	get_tree().paused = false
@@ -174,24 +178,25 @@ func show_options() -> void:
 	_focus(&"back")
 
 func show_characters() -> void:
-	_shell("01 / DRIVER     →     02 / TRACK     →     03 / RACE","Choose your driver","Pick a base character. Both use the same kart and handling.")
+	_shell("01 / DRIVER     →     02 / TRACK     →     03 / RACE","Make it yours","Pick your driver, then tune your look. Every choice is cosmetic.")
 	var left: VBoxContainer = _column(_body,.9)
 	_spacer(left)
 	var group := ButtonGroup.new()
-	for entry: DriverEntry in GameSession.catalog.drivers:
-		var button: Button = _button(left,entry.id,entry.display_name + "   /   Default outfit",_select_character.bind(entry.id))
+	for entry: CustomizationPart in GameSession.library.slot(&"body_type_id").entries:
+		var button: Button = _button(left,entry.legacy_key,entry.display_name,_select_character.bind(entry.legacy_key))
 		button.toggle_mode = true
 		button.button_group = group
-		button.set_pressed_no_signal(entry.id == GameSession.selected_character_id)
-	_description = RacingUISkin.paragraph(GameSession.character().description,19)
+		button.set_pressed_no_signal(entry.id == GameSession.profile.body_type_id)
+	_description = RacingUISkin.paragraph(GameSession.profile_store.status,17)
 	left.add_child(_description)
-	left.add_child(RacingUISkin.paragraph("More ways to make them yours are coming.",17))
+	_button(left,&"customize_character","Customize Character",show_customization.bind(false))
+	_button(left,&"customize_kart","Customize Kart",show_customization.bind(true))
 	_spacer(left)
 	_button(left,&"continue","Choose Track   →",show_tracks,true)
 	_button(left,&"back","←  Main Menu",show_title)
 	var right: VBoxContainer = _column(_body,1.1)
-	_add_preview(right)
-	_preview_name = RacingUISkin.label(GameSession.character().display_name.to_upper(),22,RacingUISkin.CYAN)
+	_add_preview(right,true)
+	_preview_name = RacingUISkin.label(GameSession.driver_name().to_upper(),22,RacingUISkin.CYAN)
 	_preview_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	right.add_child(_preview_name)
 	_footer()
@@ -200,13 +205,120 @@ func show_characters() -> void:
 
 func _select_character(id: StringName) -> void:
 	if GameSession.select_character(id):
-		_description.text = GameSession.character().description
-		_preview_name.text = GameSession.character().display_name.to_upper()
-		preview.show_driver(GameSession.character().look)
+		_preview_name.text = GameSession.driver_name().to_upper()
+		preview.show_profile(GameSession.profile,true)
+	_description.text = GameSession.profile_store.status
+	for entry: CustomizationPart in GameSession.library.slot(&"body_type_id").entries:
+		buttons[entry.legacy_key].set_pressed_no_signal(entry.id == GameSession.profile.body_type_id)
+
+func _compact(button: Button, width: float = 0.0) -> void:
+	button.custom_minimum_size = Vector2(width,44)
+	button.add_theme_font_size_override("font_size",17)
+	for state: String in ["normal","hover","pressed","focus"]:
+		var style: StyleBoxFlat = button.get_theme_stylebox(state).duplicate() as StyleBoxFlat
+		style.content_margin_left = 8
+		style.content_margin_right = 8
+		style.content_margin_top = 6
+		style.content_margin_bottom = 6
+		button.add_theme_stylebox_override(state,style)
+
+func show_customization(kart: bool) -> void:
+	_custom_registry = GameSession.library.kart if kart else GameSession.library.character
+	_deployed = false
+	_custom_values.clear()
+	_shell("NODEKINS / YOUR GARAGE","Customize " + ("Kart" if kart else "Character"),"A look that's all yours. Changes save automatically.")
+	var left: VBoxContainer = _column(_body,1.1)
+	left.add_theme_constant_override("separation",6)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	left.add_child(scroll)
+	var rows := VBoxContainer.new()
+	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rows.add_theme_constant_override("separation",8)
+	scroll.add_child(rows)
+	for slot: CustomizationSlot in _custom_registry.slots:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation",6)
+		rows.add_child(row)
+		var label: Label = RacingUISkin.label(slot.display_name,16)
+		label.custom_minimum_size.x = 116
+		row.add_child(label)
+		var previous: Button = _button(row,StringName(str(slot.field)+"_prev"),"‹",_cycle_part.bind(slot,-1))
+		previous.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		_compact(previous,38)
+		var value: Button = _button(row,slot.field,"",_cycle_part.bind(slot,1))
+		_compact(value)
+		_custom_values[slot.field] = value
+		var next: Button = _button(row,StringName(str(slot.field)+"_next"),"›",_cycle_part.bind(slot,1))
+		next.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		_compact(next,38)
+	_save_status = RacingUISkin.label(GameSession.profile_store.status,15,RacingUISkin.CYAN)
+	left.add_child(_save_status)
+	var right: VBoxContainer = _column(_body,1.0)
+	right.add_theme_constant_override("separation",8)
+	_add_preview(right,kart)
+	if kart:
+		var toggle: Button = _button(right,&"toggle_glider","Show glider",_toggle_glider)
+		_compact(toggle)
+	for slot: CustomizationSlot in _custom_registry.slots:
+		if not slot.is_palette:
+			continue
+		right.add_child(RacingUISkin.label(slot.display_name,14,RacingUISkin.MUTED))
+		var swatches := HBoxContainer.new()
+		swatches.add_theme_constant_override("separation",4)
+		right.add_child(swatches)
+		for part: CustomizationPart in slot.entries:
+			var swatch: Button = _button(swatches,StringName("palette_%s_%d" % [slot.field,part.id]),"",_choose_part.bind(slot,part.id))
+			swatch.tooltip_text = slot.display_name + ": " + part.display_name
+			swatch.add_theme_stylebox_override("normal",RacingUISkin.box(part.color,6))
+			swatch.add_theme_stylebox_override("hover",RacingUISkin.box(part.color.lightened(.2),6))
+			_compact(swatch,30)
+			swatch.custom_minimum_size.y = 30
+	var actions := HBoxContainer.new()
+	_page.add_child(actions)
+	_compact(_button(actions,&"back","←  Driver Select",show_characters))
+	_compact(_button(actions,&"switch_customization","Customize " + ("Character" if kart else "Kart"),show_customization.bind(not kart)))
+	_compact(_button(actions,&"continue","Choose Track   →",show_tracks,true))
+	_footer()
+	_set_screen(&"customize_kart" if kart else &"customize_character")
+	_refresh_customization()
+	_focus(_custom_registry.slots[0].field)
+
+func _cycle_part(slot: CustomizationSlot, direction: int) -> void:
+	var index: int = slot.entries.find(slot.entry(int(GameSession.profile.get(slot.field))))
+	_choose_part(slot,slot.entries[posmod(index+direction,slot.entries.size())].id)
+
+func _choose_part(slot: CustomizationSlot, id: int) -> void:
+	if GameSession.change_part(slot.field,id):
+		if slot.field == &"glider_id":
+			_deployed = true
+		_refresh_customization()
+	_save_status.text = GameSession.profile_store.status
+
+func _toggle_glider() -> void:
+	_deployed = not _deployed
+	_refresh_customization()
+
+func _refresh_customization() -> void:
+	for slot: CustomizationSlot in _custom_registry.slots:
+		var part: CustomizationPart = slot.entry(int(GameSession.profile.get(slot.field)))
+		_custom_values[slot.field].text = part.display_name
+		if slot.is_palette:
+			for entry: CustomizationPart in slot.entries:
+				var swatch: Button = buttons[StringName("palette_%s_%d" % [slot.field,entry.id])]
+				swatch.text = "•" if part.id == entry.id else ""
+				swatch.add_theme_color_override("font_color",Color.BLACK if entry.color.get_luminance() > .4 else Color.WHITE)
+	var kart: bool = _custom_registry == GameSession.library.kart
+	preview.show_profile(GameSession.profile,kart,&"Idle",_deployed)
+	if kart:
+		# The garage reserves room for palettes, so frame this shorter viewport closer.
+		preview.camera.size = 2.25 if _deployed else 2.05
+		buttons[&"toggle_glider"].text = "Hide glider" if _deployed else "Show glider"
 
 func show_tracks() -> void:
 	_dispose_race()
-	_shell("01 / DRIVER     →     02 / TRACK     →     03 / RACE","Choose a circuit","Driver: " + GameSession.character().display_name + "   ·   Three laps. Four racers. One finish line.")
+	_shell("01 / DRIVER     →     02 / TRACK     →     03 / RACE","Choose a circuit","Driver: " + GameSession.driver_name() + "   ·   Three laps. Four racers. One finish line.")
 	var left: VBoxContainer = _column(_body,.85)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -264,8 +376,8 @@ func start_race() -> void:
 	track.name = "ActiveRace"
 	track.process_mode = Node.PROCESS_MODE_PAUSABLE
 	track.item_random_seed = race_random_seed
-	track.get_node("Player/Visuals/Rider").look = GameSession.character().look
 	add_child(track)
+	track.player.get_node("Visuals").apply_profile(GameSession.profile)
 	# Presentation adapter: the standalone track keeps its original instrumentation.
 	track.set_process_unhandled_input(false)
 	for label: Label3D in track.player.find_children("*", "Label3D", false, false):
@@ -372,7 +484,7 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		match current_screen:
 			&"characters", &"options", &"results": show_title()
-			&"tracks": show_characters()
+			&"tracks", &"customize_kart", &"customize_character": show_characters()
 			&"paused": resume_race()
 
 func _exit_tree() -> void:

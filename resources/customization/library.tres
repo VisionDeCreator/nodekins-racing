@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="CustomizationLibrary" format=3]
+[ext_resource type="Script" path="res://scripts/customization/customization_library.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/customization/kart_registry.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/customization/character_registry.tres" id="3"]
+[resource]
+script = ExtResource("1")
+kart = ExtResource("2")
+character = ExtResource("3")

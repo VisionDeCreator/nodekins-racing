@@ -1,0 +1,8 @@
+[gd_scene format=3]
+[ext_resource type="PackedScene" path="res://scenes/ui/Main.tscn" id="app"]
+[ext_resource type="Script" path="res://tools/phase_6_5/verify_customization.gd" id="qa"]
+[node name="CustomizationRestartVerification" type="Node"]
+script = ExtResource("qa")
+restart_only = true
+[node name="App" parent="." instance=ExtResource("app")]
+race_random_seed = 445

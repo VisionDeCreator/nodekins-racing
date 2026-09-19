@@ -1,0 +1,237 @@
+[gd_resource type="Resource" script_class="PartsRegistry" format=3]
+[ext_resource type="Script" path="res://scripts/customization/parts_registry.gd" id="registry"]
+[ext_resource type="Script" path="res://scripts/customization/slot_definition.gd" id="slot"]
+[ext_resource type="Script" path="res://scripts/customization/part_definition.gd" id="part"]
+[ext_resource type="PackedScene" path="res://assets/karts/kart_01.glb" id="kart"]
+[ext_resource type="PackedScene" path="res://assets/customization/kart_variants.glb" id="variants"]
+[ext_resource type="PackedScene" path="res://assets/characters/char_body_male.glb" id="male"]
+[ext_resource type="PackedScene" path="res://assets/characters/char_body_female.glb" id="female"]
+[ext_resource type="PackedScene" path="res://assets/characters/char_appearance_parts.glb" id="clothes"]
+[ext_resource type="PackedScene" path="res://assets/customization/character_variants.glb" id="hair"]
+[ext_resource type="Shader" path="res://assets/karts/kart_paint.gdshader" id="shader_paint"]
+[ext_resource type="Shader" path="res://assets/characters/skin_tint.gdshader" id="shader_skin"]
+[ext_resource type="Shader" path="res://assets/customization/eye_tint.gdshader" id="shader_eye"]
+[sub_resource type="ShaderMaterial" id="mat_paint"]
+shader = ExtResource("shader_paint")
+[sub_resource type="ShaderMaterial" id="mat_wing"]
+shader = ExtResource("shader_paint")
+shader_parameter/neutralize_base = true
+[sub_resource type="ShaderMaterial" id="mat_skin"]
+shader = ExtResource("shader_skin")
+[sub_resource type="ShaderMaterial" id="mat_eye0"]
+shader = ExtResource("shader_eye")
+shader_parameter/eye_color = Color(0.08235294117647059, 0.5372549019607843, 0.7215686274509804, 1)
+[sub_resource type="ShaderMaterial" id="mat_eye1"]
+shader = ExtResource("shader_eye")
+shader_parameter/eye_color = Color(0.27450980392156865, 0.5882352941176471, 0.35294117647058826, 1)
+[sub_resource type="ShaderMaterial" id="mat_eye2"]
+shader = ExtResource("shader_eye")
+shader_parameter/eye_color = Color(0.5843137254901961, 0.3607843137254902, 0.1607843137254902, 1)
+[sub_resource type="Resource" id="chassis_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Classic"
+asset = ExtResource("kart")
+material = SubResource("mat_paint")
+mesh_name = &"kart_chassis_01"
+tint_source = &"primary_color"
+[sub_resource type="Resource" id="chassis_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Sprint"
+asset = ExtResource("variants")
+material = SubResource("mat_paint")
+mesh_name = &"kart_chassis_02"
+tint_source = &"primary_color"
+[sub_resource type="Resource" id="slot_chassis_id"]
+script = ExtResource("slot")
+field = &"chassis_id"
+display_name = "Chassis"
+is_palette = false
+sockets = PackedStringArray("socket_chassis")
+entries = Array[ExtResource("part")]([SubResource("chassis_id_0"), SubResource("chassis_id_1")])
+[sub_resource type="Resource" id="wheel_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Faceted"
+asset = ExtResource("kart")
+material = SubResource("mat_paint")
+mesh_name = &"kart_wheel_01"
+tint_source = &"secondary_color"
+[sub_resource type="Resource" id="wheel_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Six-spoke"
+asset = ExtResource("variants")
+material = SubResource("mat_paint")
+mesh_name = &"kart_wheel_02"
+tint_source = &"secondary_color"
+[sub_resource type="Resource" id="slot_wheel_id"]
+script = ExtResource("slot")
+field = &"wheel_id"
+display_name = "Wheels"
+is_palette = false
+sockets = PackedStringArray("socket_wheel_fl", "socket_wheel_fr", "socket_wheel_rl", "socket_wheel_rr")
+entries = Array[ExtResource("part")]([SubResource("wheel_id_0"), SubResource("wheel_id_1")])
+[sub_resource type="Resource" id="spoiler_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Touring"
+asset = ExtResource("kart")
+material = SubResource("mat_paint")
+mesh_name = &"kart_spoiler_01"
+tint_source = &"secondary_color"
+[sub_resource type="Resource" id="spoiler_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Split fin"
+asset = ExtResource("variants")
+material = SubResource("mat_paint")
+mesh_name = &"kart_spoiler_02"
+tint_source = &"secondary_color"
+[sub_resource type="Resource" id="slot_spoiler_id"]
+script = ExtResource("slot")
+field = &"spoiler_id"
+display_name = "Spoiler"
+is_palette = false
+sockets = PackedStringArray("socket_spoiler")
+entries = Array[ExtResource("part")]([SubResource("spoiler_id_0"), SubResource("spoiler_id_1")])
+[sub_resource type="Resource" id="glider_id_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Cloudwing"
+asset = ExtResource("kart")
+material = SubResource("mat_wing")
+mesh_name = &"kart_glider_01"
+tint_source = &"secondary_color"
+[sub_resource type="Resource" id="glider_id_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Arrowwing"
+asset = ExtResource("variants")
+material = SubResource("mat_wing")
+mesh_name = &"kart_glider_02"
+tint_source = &"secondary_color"
+[sub_resource type="Resource" id="slot_glider_id"]
+script = ExtResource("slot")
+field = &"glider_id"
+display_name = "Glider"
+is_palette = false
+sockets = PackedStringArray("socket_glider")
+entries = Array[ExtResource("part")]([SubResource("glider_id_0"), SubResource("glider_id_1")])
+[sub_resource type="Resource" id="primary_color_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Lagoon"
+color = Color(0.21176470588235294, 0.7058823529411765, 0.807843137254902, 1)
+[sub_resource type="Resource" id="primary_color_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Cherry"
+color = Color(0.8941176470588236, 0.24313725490196078, 0.27058823529411763, 1)
+[sub_resource type="Resource" id="primary_color_2"]
+script = ExtResource("part")
+id = 2
+display_name = "Midnight"
+color = Color(0.1607843137254902, 0.21568627450980393, 0.3215686274509804, 1)
+[sub_resource type="Resource" id="primary_color_3"]
+script = ExtResource("part")
+id = 3
+display_name = "Citrus"
+color = Color(0.9215686274509803, 0.8274509803921568, 0.3058823529411765, 1)
+[sub_resource type="Resource" id="primary_color_4"]
+script = ExtResource("part")
+id = 4
+display_name = "Sunset"
+color = Color(0.8901960784313725, 0.6313725490196078, 0.24313725490196078, 1)
+[sub_resource type="Resource" id="primary_color_5"]
+script = ExtResource("part")
+id = 5
+display_name = "Lime"
+color = Color(0.44313725490196076, 0.8, 0.34509803921568627, 1)
+[sub_resource type="Resource" id="primary_color_6"]
+script = ExtResource("part")
+id = 6
+display_name = "Violet"
+color = Color(0.5803921568627451, 0.3333333333333333, 0.8352941176470589, 1)
+[sub_resource type="Resource" id="primary_color_7"]
+script = ExtResource("part")
+id = 7
+display_name = "Cloud"
+color = Color(0.9098039215686274, 0.9215686274509803, 0.8862745098039215, 1)
+[sub_resource type="Resource" id="primary_color_8"]
+script = ExtResource("part")
+id = 8
+display_name = "Ocean"
+color = Color(0.21176470588235294, 0.4470588235294118, 0.8313725490196079, 1)
+[sub_resource type="Resource" id="primary_color_9"]
+script = ExtResource("part")
+id = 9
+display_name = "Rose"
+color = Color(0.9137254901960784, 0.4627450980392157, 0.6784313725490196, 1)
+[sub_resource type="Resource" id="slot_primary_color"]
+script = ExtResource("slot")
+field = &"primary_color"
+display_name = "Primary paint"
+is_palette = true
+entries = Array[ExtResource("part")]([SubResource("primary_color_0"), SubResource("primary_color_1"), SubResource("primary_color_2"), SubResource("primary_color_3"), SubResource("primary_color_4"), SubResource("primary_color_5"), SubResource("primary_color_6"), SubResource("primary_color_7"), SubResource("primary_color_8"), SubResource("primary_color_9")])
+[sub_resource type="Resource" id="secondary_color_0"]
+script = ExtResource("part")
+id = 0
+display_name = "Lagoon"
+color = Color(0.21176470588235294, 0.7058823529411765, 0.807843137254902, 1)
+[sub_resource type="Resource" id="secondary_color_1"]
+script = ExtResource("part")
+id = 1
+display_name = "Cherry"
+color = Color(0.8941176470588236, 0.24313725490196078, 0.27058823529411763, 1)
+[sub_resource type="Resource" id="secondary_color_2"]
+script = ExtResource("part")
+id = 2
+display_name = "Midnight"
+color = Color(0.1607843137254902, 0.21568627450980393, 0.3215686274509804, 1)
+[sub_resource type="Resource" id="secondary_color_3"]
+script = ExtResource("part")
+id = 3
+display_name = "Citrus"
+color = Color(0.9215686274509803, 0.8274509803921568, 0.3058823529411765, 1)
+[sub_resource type="Resource" id="secondary_color_4"]
+script = ExtResource("part")
+id = 4
+display_name = "Sunset"
+color = Color(0.8901960784313725, 0.6313725490196078, 0.24313725490196078, 1)
+[sub_resource type="Resource" id="secondary_color_5"]
+script = ExtResource("part")
+id = 5
+display_name = "Lime"
+color = Color(0.44313725490196076, 0.8, 0.34509803921568627, 1)
+[sub_resource type="Resource" id="secondary_color_6"]
+script = ExtResource("part")
+id = 6
+display_name = "Violet"
+color = Color(0.5803921568627451, 0.3333333333333333, 0.8352941176470589, 1)
+[sub_resource type="Resource" id="secondary_color_7"]
+script = ExtResource("part")
+id = 7
+display_name = "Cloud"
+color = Color(0.9098039215686274, 0.9215686274509803, 0.8862745098039215, 1)
+[sub_resource type="Resource" id="secondary_color_8"]
+script = ExtResource("part")
+id = 8
+display_name = "Ocean"
+color = Color(0.21176470588235294, 0.4470588235294118, 0.8313725490196079, 1)
+[sub_resource type="Resource" id="secondary_color_9"]
+script = ExtResource("part")
+id = 9
+display_name = "Rose"
+color = Color(0.9137254901960784, 0.4627450980392157, 0.6784313725490196, 1)
+[sub_resource type="Resource" id="slot_secondary_color"]
+script = ExtResource("slot")
+field = &"secondary_color"
+display_name = "Accent paint"
+is_palette = true
+entries = Array[ExtResource("part")]([SubResource("secondary_color_0"), SubResource("secondary_color_1"), SubResource("secondary_color_2"), SubResource("secondary_color_3"), SubResource("secondary_color_4"), SubResource("secondary_color_5"), SubResource("secondary_color_6"), SubResource("secondary_color_7"), SubResource("secondary_color_8"), SubResource("secondary_color_9")])
+[resource]
+script = ExtResource("registry")
+display_name = "Kart"
+slots = Array[ExtResource("slot")]([SubResource("slot_chassis_id"), SubResource("slot_wheel_id"), SubResource("slot_spoiler_id"), SubResource("slot_glider_id"), SubResource("slot_primary_color"), SubResource("slot_secondary_color")])

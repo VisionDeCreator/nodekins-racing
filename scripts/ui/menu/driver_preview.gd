@@ -5,6 +5,9 @@ var viewport: SubViewport
 var pivot: Node3D
 var character: CharacterAppearance
 var camera: Camera3D
+var kart_assembly: Node3D
+var fitted_parts: Dictionary = {}
+var profile: CustomizationProfile
 var _time: float = 0.0
 var _base_yaw: float = -0.25
 
@@ -48,26 +51,28 @@ func _ready() -> void:
 	camera.current = true
 
 func show_driver(look: CharacterLook, seated: bool = false, pose: StringName = &"Idle") -> void:
+	show_profile(CharacterAppearance.LIBRARY.from_legacy(look),seated,pose)
+
+func show_profile(value: CustomizationProfile, seated: bool = false, pose: StringName = &"Idle", deployed: bool = false) -> void:
+	profile = value.duplicate() as CustomizationProfile
+	kart_assembly = null
+	fitted_parts.clear()
 	for child: Node in pivot.get_children():
 		pivot.remove_child(child)
 		child.queue_free()
 	character = preload("res://scenes/characters/Character.tscn").instantiate() as CharacterAppearance
-	character.look = look
+	character.profile = profile
 	pivot.add_child(character)
 	character.play_pose(&"Drive" if seated else pose, 0.0)
 	if seated:
 		var kart: Node3D = preload("res://assets/karts/kart_01.glb").instantiate()
 		pivot.add_child(kart)
-		kart.get_node("kart_01/socket_glider").hide()
-		for mesh_name: String in ["kart_chassis_01", "kart_spoiler_01"]:
-			var mesh: MeshInstance3D = kart.find_child(mesh_name, true, false)
-			var paint := ShaderMaterial.new()
-			paint.shader = preload("res://assets/karts/kart_paint.gdshader")
-			paint.set_shader_parameter("paint_color", RacingUISkin.CYAN)
-			mesh.material_override = paint
-		camera.size = 3.5
-		camera.position = Vector3(2.7,1.8,-4)
-		camera.look_at(Vector3(0,0.6,0))
+		kart_assembly = kart.get_node("kart_01")
+		fitted_parts = KartPartsAssembler.apply(kart_assembly,profile)
+		kart_assembly.get_node("socket_glider").visible = deployed
+		camera.size = 4.2 if deployed else 3.5
+		camera.position = Vector3(2.7,2.3 if deployed else 1.8,-4)
+		camera.look_at(Vector3(0,1.0 if deployed else 0.6,0))
 	else:
 		camera.size = 2.15
 		camera.position = Vector3(0.9,1.12,-4)

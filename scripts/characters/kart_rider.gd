@@ -30,3 +30,8 @@ func set_look(value: CharacterLook) -> void:
 	if is_node_ready():
 		character.set_look(value)
 		character.play_pose(&"Drive", 0.0)
+
+func set_profile(value: CustomizationProfile) -> void:
+	character.set_profile(value)
+	look = character.look
+	character.play_pose(&"Drive",0.0)
