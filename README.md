@@ -1,9 +1,10 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 4.5 glide. Race three CPU opponents around the gray-box oval,
-automatically deploy a glider over its ramp/gap, and collect position-weighted items.
-See `docs/phase_4_5.md` for glide tuning and verification, `docs/phase_4.md` for items,
+Current milestone: Phase 5a kart art. A modular Blender kart and deployed glider now
+replace the placeholders for every racer on the gray-box oval.
+See `docs/phase_5a.md` for assets, sockets, materials, and verification,
+`docs/phase_4_5.md` for glide tuning, `docs/phase_4.md` for items,
 `docs/phase_3.md` for CPU logic, and `docs/phase_2.md` for race rules.
 
 ## Current scope
@@ -29,17 +30,17 @@ Drive up the orange ramp at speed to glide automatically across the 16 m gap. St
 allows gentle airborne corrections; landing retracts the wing automatically. Banana
 stays in the item slot until landing; Boost and Shell can be used in the air.
 The HUD shows lap, position, timer, last/next checkpoint, speed, mini-turbo charge, and
-live standings for the player and three CPUs. CPU noses/labels are coral, green, and gold.
+live standings for the player and three CPUs. CPU paint/labels are coral, green, and gold.
 
 For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
 godot --headless --path . --import
-godot --headless --fixed-fps 60 --path . res://scenes/test/GlideVerification.tscn -- --phase45-check
+godot --headless --fixed-fps 60 --path . res://scenes/test/KartArtVerification.tscn -- --phase5a-check
 ```
 
-Run the verification scene without `--headless` or `--fixed-fps 60` to capture launch,
-glide, and landing in `artifacts/phase_4_5/`. The QA scene pilots the player slot for repeatable checks;
+Run the verification scene without `--headless` or `--fixed-fps 60` to capture front/rear,
+drift/boost, launch/glide/landing views in `artifacts/phase_5a/`. The QA scene pilots the player slot for repeatable checks;
 the normal main scene leaves it under human control.
 On this Mac the engine executable is `/Applications/Godot.app/Contents/MacOS/Godot`.
 
@@ -67,6 +68,11 @@ development. Distribution signing and notarization are not part of Phase 0.
 | Location | Purpose |
 | --- | --- |
 | `scenes/track/Track.tscn` | Current main scene: player + three CPUs, three laps |
+| `assets/karts/kart_01.glb` | Blender kart: chassis, four shared wheels, spoiler, deployed glider |
+| `assets/karts/kart_paint.gdshader` | Chassis grayscale mask, per-kart paint, drift/hit feedback |
+| `source_assets/phase_5a/kart_01.blend` | Versioned editable Blender source |
+| `tools/phase_5a/kart_import.gd` | Built-in import hook for vertex colors and toon materials |
+| `scenes/test/KartArtVerification.tscn` | Art structure checks, close screenshots, and full glide race |
 | `scripts/glide/` | Shared flight state and automatic launch trigger |
 | `resources/tracks/test_glide.tres` | Ramp/gap geometry and safe checkpoint recovery |
 | `scenes/test/GlideVerification.tscn` | Four-kart glide race, air control, landing, and item checks |
@@ -95,10 +101,13 @@ development. Distribution signing and notarization are not part of Phase 0.
 | `docs/phase_3.md` | AI implementation, tuning, and verification |
 | `docs/phase_4.md` | Item implementation and verification |
 | `docs/phase_4_5.md` | Glide implementation, tuning, and verification |
+| `docs/phase_5a.md` | Modular kart source, coordinate convention, attachment rig, and validation |
 
-The editable asset workspace copy is
+The Phase 0 pipeline source is
 `/Users/shane/Gaming/Assets/nodekins-racing/phase_0/pipeline_test.blend`.
 Keep that source, the repository snapshot, and the GLB in sync when re-exporting.
+The current kart source is `/Users/shane/Gaming/Assets/nodekins-racing/phase_5a/kart_01.blend`;
+its matching snapshot lives under `source_assets/phase_5a`.
 Future production assets must be made and exported using Blender MCP. Gameplay is proven
 with gray-box geometry before the art phase.
 

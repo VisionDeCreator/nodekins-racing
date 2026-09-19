@@ -8,52 +8,16 @@
 [ext_resource type="Script" path="res://scripts/kart/chase_camera.gd" id="6"]
 
 [ext_resource type="Script" path="res://scripts/glide/kart_glide.gd" id="7"]
+[ext_resource type="PackedScene" path="res://assets/karts/kart_01.glb" id="8"]
 
 [sub_resource type="BoxShape3D" id="Collision"]
 size = Vector3(1.2, 0.7, 1.9)
-
-[sub_resource type="BoxMesh" id="Body"]
-size = Vector3(1.15, 0.4, 1.85)
-
-[sub_resource type="StandardMaterial3D" id="Dark"]
-albedo_color = Color(0.07, 0.08, 0.10, 1)
-roughness = 0.95
-
-[sub_resource type="BoxMesh" id="Seat"]
-material = SubResource("Dark")
-size = Vector3(0.62, 0.38, 0.65)
-
-[sub_resource type="CylinderMesh" id="Wheel"]
-material = SubResource("Dark")
-top_radius = 0.29
-bottom_radius = 0.29
-height = 0.26
-radial_segments = 12
-rings = 1
-
-[sub_resource type="StandardMaterial3D" id="NoseMaterial"]
-albedo_color = Color(0.9, 0.93, 0.97, 1)
-roughness = 0.6
-
-[sub_resource type="BoxMesh" id="Nose"]
-material = SubResource("NoseMaterial")
-size = Vector3(0.82, 0.12, 0.3)
 
 [sub_resource type="BoxMesh" id="Trail"]
 size = Vector3(0.58, 0.12, 1.0)
 
 [sub_resource type="SphereShape3D" id="CameraSweep"]
 radius = 0.18
-
-[sub_resource type="StandardMaterial3D" id="GliderMaterial"]
-albedo_color = Color(0.96, 0.62, 0.16, 1)
-roughness = 0.7
-[sub_resource type="BoxMesh" id="GliderWing"]
-material = SubResource("GliderMaterial")
-size = Vector3(3.8, 0.09, 1.1)
-[sub_resource type="BoxMesh" id="GliderStrut"]
-material = SubResource("Dark")
-size = Vector3(0.065, 0.95, 0.065)
 
 [node name="Kart" type="CharacterBody3D"]
 collision_layer = 2
@@ -76,37 +40,7 @@ script = ExtResource("4")
 [node name="Visuals" type="Node3D" parent="."]
 script = ExtResource("5")
 
-[node name="Body" type="MeshInstance3D" parent="Visuals"]
-position = Vector3(0, 0.43, 0)
-mesh = SubResource("Body")
-
-[node name="Seat" type="MeshInstance3D" parent="Visuals"]
-position = Vector3(0, 0.72, 0.15)
-mesh = SubResource("Seat")
-
-[node name="Nose" type="MeshInstance3D" parent="Visuals"]
-position = Vector3(0, 0.66, -0.72)
-mesh = SubResource("Nose")
-
-[node name="FrontLeftWheel" type="MeshInstance3D" parent="Visuals"]
-position = Vector3(-0.68, 0.29, -0.57)
-rotation_degrees = Vector3(0, 0, 90)
-mesh = SubResource("Wheel")
-
-[node name="FrontRightWheel" type="MeshInstance3D" parent="Visuals"]
-position = Vector3(0.68, 0.29, -0.57)
-rotation_degrees = Vector3(0, 0, 90)
-mesh = SubResource("Wheel")
-
-[node name="RearLeftWheel" type="MeshInstance3D" parent="Visuals"]
-position = Vector3(-0.68, 0.29, 0.6)
-rotation_degrees = Vector3(0, 0, 90)
-mesh = SubResource("Wheel")
-
-[node name="RearRightWheel" type="MeshInstance3D" parent="Visuals"]
-position = Vector3(0.68, 0.29, 0.6)
-rotation_degrees = Vector3(0, 0, 90)
-mesh = SubResource("Wheel")
+[node name="Model" parent="Visuals" instance=ExtResource("8")]
 
 [node name="BoostTrail" type="MeshInstance3D" parent="Visuals"]
 visible = false
@@ -135,12 +69,8 @@ fov = 70.0
 script = ExtResource("7")
 [node name="Canopy" type="Node3D" parent="Glide"]
 visible = false
-[node name="Wing" type="MeshInstance3D" parent="Glide/Canopy"]
-position = Vector3(0, 1.65, 0)
-mesh = SubResource("GliderWing")
-[node name="StrutLeft" type="MeshInstance3D" parent="Glide/Canopy"]
-position = Vector3(-0.48, 1.13, 0)
-mesh = SubResource("GliderStrut")
-[node name="StrutRight" type="MeshInstance3D" parent="Glide/Canopy"]
-position = Vector3(0.48, 1.13, 0)
-mesh = SubResource("GliderStrut")
+
+[node name="socket_glider" parent="Visuals/Model/kart_01" index="1"]
+visible = false
+
+[editable path="Visuals/Model"]

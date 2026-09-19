@@ -35,7 +35,7 @@ func _ready() -> void:
 		player.global_position.x -= 2.7
 		player.collision_mask = 3
 		player.add_to_group("race_karts")
-		_mark_kart(player, "PLAYER", Color("e8edf2"))
+		_mark_kart(player, "PLAYER", player.get_node("Visuals").paint_color)
 	RaceManager.register_kart(player, &"player", "Player")
 	_spawn_cpus()
 	player.get_node("ChaseCamera/SpringArm3D/Camera3D").make_current()
@@ -89,9 +89,7 @@ func _spawn_cpus() -> void:
 
 func _mark_kart(kart: ArcadeKart, label_text: String, color: Color) -> void:
 	# Persistent identity remains readable when the body changes color for drift/boost.
-	var material := StandardMaterial3D.new()
-	material.albedo_color = color
-	kart.get_node("Visuals/Nose").material_override = material
+	kart.get_node("Visuals").set_livery(color)
 	var label := Label3D.new()
 	label.text = label_text
 	label.position = Vector3(0, 1.8, 0)
