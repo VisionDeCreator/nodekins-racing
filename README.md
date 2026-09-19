@@ -1,10 +1,10 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 4 items. Race three CPU opponents around the gray-box oval,
-collect position-weighted Boost/Shell/Banana items, and use them to change the race.
-See `docs/phase_4.md` for item tuning and verification, `docs/phase_3.md` for CPU logic,
-and `docs/phase_2.md` for race rules.
+Current milestone: Phase 4.5 glide. Race three CPU opponents around the gray-box oval,
+automatically deploy a glider over its ramp/gap, and collect position-weighted items.
+See `docs/phase_4_5.md` for glide tuning and verification, `docs/phase_4.md` for items,
+`docs/phase_3.md` for CPU logic, and `docs/phase_2.md` for race rules.
 
 ## Current scope
 
@@ -25,6 +25,9 @@ Keyboard: WASD/arrows, Space to drift, R for checkpoint recovery. Gamepad: left 
 to accelerate, left trigger to brake, south face button to drift, north face button to reset.
 Press **E / gamepad west face button** to use the held item. Cyan boxes refill after four seconds.
 Hold drift while steering; release after charging cyan/amber/violet for a mini-turbo.
+Drive up the orange ramp at speed to glide automatically across the 16 m gap. Steering
+allows gentle airborne corrections; landing retracts the wing automatically. Banana
+stays in the item slot until landing; Boost and Shell can be used in the air.
 The HUD shows lap, position, timer, last/next checkpoint, speed, mini-turbo charge, and
 live standings for the player and three CPUs. CPU noses/labels are coral, green, and gold.
 
@@ -32,11 +35,11 @@ For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
 godot --headless --path . --import
-godot --headless --path . res://scenes/test/ItemVerification.tscn -- --phase4-check
+godot --headless --fixed-fps 60 --path . res://scenes/test/GlideVerification.tscn -- --phase45-check
 ```
 
-Run the verification scene without `--headless` to capture the item HUD and a deployed trap
-in `artifacts/phase_4/`. The QA scene pilots the player slot for repeatable checks;
+Run the verification scene without `--headless` or `--fixed-fps 60` to capture launch,
+glide, and landing in `artifacts/phase_4_5/`. The QA scene pilots the player slot for repeatable checks;
 the normal main scene leaves it under human control.
 On this Mac the engine executable is `/Applications/Godot.app/Contents/MacOS/Godot`.
 
@@ -64,6 +67,9 @@ development. Distribution signing and notarization are not part of Phase 0.
 | Location | Purpose |
 | --- | --- |
 | `scenes/track/Track.tscn` | Current main scene: player + three CPUs, three laps |
+| `scripts/glide/` | Shared flight state and automatic launch trigger |
+| `resources/tracks/test_glide.tres` | Ramp/gap geometry and safe checkpoint recovery |
+| `scenes/test/GlideVerification.tscn` | Four-kart glide race, air control, landing, and item checks |
 | `scenes/items/ItemBox.tscn` | Rotating pickup with respawn cooldown |
 | `resources/items/*.tres` | Automatically discovered item definitions and effect parameters |
 | `scripts/items/` | Inventory, weighted rolls, shared effects, deployed actors, and item HUD |
@@ -87,7 +93,8 @@ development. Distribution signing and notarization are not part of Phase 0.
 | `docs/phase_1.md` | Phase 1 movement implementation and tuning handoff |
 | `docs/phase_2.md` | Track/race implementation and verification |
 | `docs/phase_3.md` | AI implementation, tuning, and verification |
-| `docs/phase_4.md` | Current item implementation and verification |
+| `docs/phase_4.md` | Item implementation and verification |
+| `docs/phase_4_5.md` | Glide implementation, tuning, and verification |
 
 The editable asset workspace copy is
 `/Users/shane/Gaming/Assets/nodekins-racing/phase_0/pipeline_test.blend`.
@@ -97,7 +104,7 @@ with gray-box geometry before the art phase.
 
 ## Build order and design intent
 
-Phase 0 setup → movement → track/laps → AI racers → items → art → UI → audio →
+Phase 0 setup → movement → track/laps → AI racers → items → glide → art → UI → audio →
 customization → online multiplayer → polish. Each phase ends in an in-engine verified
 result before the next begins. Design and balance specifications come from the user
 and their design co-pilot; provisional values must be identified.

@@ -13,6 +13,8 @@ extends ItemEffect
 @export var maximum_hold: float = 5.0
 
 func activate(inventory: KartInventory, definition: ItemDefinition) -> bool:
+	if travel_speed <= 0.0 and inventory.kart.glide.active:
+		return false # Keep a trap in the slot until landing; never leave a floating obstacle.
 	var actor: Node3D = actor_scene.instantiate() as Node3D
 	actor.configure(inventory, definition, self)
 	inventory.system.add_child(actor)
@@ -22,6 +24,6 @@ func activate(inventory: KartInventory, definition: ItemDefinition) -> bool:
 	return true
 
 func cpu_should_use(inventory: KartInventory, definition: ItemDefinition) -> bool:
-	if inventory.held_seconds < definition.cpu_delay:
+	if (travel_speed <= 0.0 and inventory.kart.glide.active) or inventory.held_seconds < definition.cpu_delay:
 		return false
 	return not wait_for_target or inventory.find_target(target_range, target_cone_degrees) != null or inventory.held_seconds >= maximum_hold

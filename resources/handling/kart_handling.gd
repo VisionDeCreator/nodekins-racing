@@ -34,6 +34,15 @@ extends Resource
 @export_range(1.0, 200.0, 1.0) var boost_acceleration: float = 90.0
 @export_range(1.0, 100.0, 1.0) var boost_decay: float = 24.0
 
+@export_group("Glide")
+@export_range(0.05, 1.0, 0.01) var glide_gravity_multiplier: float = 0.3
+@export_range(0.0, 1.0, 0.01) var glide_air_steering_authority: float = 0.22
+@export_range(0.0, 10.0, 0.1, "suffix:m/s") var glide_launch_velocity: float = 3.5
+@export_range(0.1, 20.0, 0.1, "suffix:m/s") var glide_minimum_launch_speed: float = 6.0
+@export_range(1.0, 90.0, 1.0, "suffix:deg") var glide_heading_limit_degrees: float = 25.0
+@export_range(0.1, 20.0, 0.1) var glide_air_grip: float = 3.0
+@export_range(0.5, 10.0, 0.1, "suffix:s") var glide_maximum_seconds: float = 4.0
+
 @export_group("Chase Camera")
 @export_range(1.0, 10.0, 0.1) var camera_distance: float = 4.5
 @export_range(0.5, 6.0, 0.1) var camera_height: float = 2.0
@@ -60,4 +69,6 @@ func validation_errors() -> PackedStringArray:
 			if mini_turbo_thresholds[index] <= previous or mini_turbo_speed_multipliers[index] <= 1.0 or mini_turbo_durations[index] <= 0.0:
 				errors.append("Turbo thresholds must ascend; multipliers > 1; durations > 0.")
 			previous = mini_turbo_thresholds[index]
+	if glide_gravity_multiplier <= 0.0 or glide_gravity_multiplier > 1.0 or glide_air_steering_authority < 0.0 or glide_air_steering_authority > 1.0 or glide_maximum_seconds <= 0.0:
+		errors.append("Glide needs positive reduced gravity/lifetime and air authority within 0–1.")
 	return errors

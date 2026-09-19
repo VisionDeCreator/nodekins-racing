@@ -6,6 +6,8 @@ extends Resource
 @export var points: PackedVector3Array
 @export var checkpoint_indices: PackedInt32Array
 @export var road_width: float = 14.0
+## Optional safe-ground anchors for checkpoints suspended over a gap.
+@export var recovery_overrides: Dictionary = {}
 var _distances: PackedFloat32Array = []
 var _length: float = 0.0
 
@@ -26,6 +28,8 @@ func checkpoint_transform(index: int) -> Transform3D:
 	return sample(checkpoint_distance(index))
 
 func recovery_transform(index: int) -> Transform3D:
+	if recovery_overrides.has(index):
+		return recovery_overrides[index]
 	# Spawn just beyond the accepted gate, never beyond the next required checkpoint.
 	var pose: Transform3D = sample(checkpoint_distance(index) + 3.0)
 	pose.origin.y += 0.12

@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://scripts/kart/kart_visuals.gd" id="5"]
 [ext_resource type="Script" path="res://scripts/kart/chase_camera.gd" id="6"]
 
+[ext_resource type="Script" path="res://scripts/glide/kart_glide.gd" id="7"]
+
 [sub_resource type="BoxShape3D" id="Collision"]
 size = Vector3(1.2, 0.7, 1.9)
 
@@ -42,6 +44,16 @@ size = Vector3(0.58, 0.12, 1.0)
 
 [sub_resource type="SphereShape3D" id="CameraSweep"]
 radius = 0.18
+
+[sub_resource type="StandardMaterial3D" id="GliderMaterial"]
+albedo_color = Color(0.96, 0.62, 0.16, 1)
+roughness = 0.7
+[sub_resource type="BoxMesh" id="GliderWing"]
+material = SubResource("GliderMaterial")
+size = Vector3(3.8, 0.09, 1.1)
+[sub_resource type="BoxMesh" id="GliderStrut"]
+material = SubResource("Dark")
+size = Vector3(0.065, 0.95, 0.065)
 
 [node name="Kart" type="CharacterBody3D"]
 collision_layer = 2
@@ -118,3 +130,17 @@ current = true
 near = 0.08
 far = 500.0
 fov = 70.0
+
+[node name="Glide" type="Node3D" parent="."]
+script = ExtResource("7")
+[node name="Canopy" type="Node3D" parent="Glide"]
+visible = false
+[node name="Wing" type="MeshInstance3D" parent="Glide/Canopy"]
+position = Vector3(0, 1.65, 0)
+mesh = SubResource("GliderWing")
+[node name="StrutLeft" type="MeshInstance3D" parent="Glide/Canopy"]
+position = Vector3(-0.48, 1.13, 0)
+mesh = SubResource("GliderStrut")
+[node name="StrutRight" type="MeshInstance3D" parent="Glide/Canopy"]
+position = Vector3(0.48, 1.13, 0)
+mesh = SubResource("GliderStrut")

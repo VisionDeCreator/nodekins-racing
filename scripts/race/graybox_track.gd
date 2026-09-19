@@ -5,6 +5,8 @@ extends Node3D
 const KART_SCENE: PackedScene = preload("res://scenes/kart/Kart.tscn")
 const CPU_TUNING: AITuning = preload("res://resources/ai/default_ai.tres")
 @export_range(0, 3) var cpu_count: int = 3
+@export var glide_enabled: bool = true
+@export var glide_section: GlideSection = preload("res://resources/tracks/test_glide.tres")
 @export var items_enabled: bool = true
 @export var item_random_seed: int = 0
 var items: RaceItems
@@ -19,7 +21,14 @@ var _white: StandardMaterial3D
 var _dark: StandardMaterial3D
 
 func _ready() -> void:
+	# Per-track recovery anchors must not mutate the reusable route asset.
+	route = route.duplicate() as TrackRoute
+	route.recovery_overrides = route.recovery_overrides.duplicate()
 	route.prepare()
+	if glide_enabled:
+		var recovery_pose: Transform3D = route.sample(glide_section.safe_recovery_distance)
+		recovery_pose.origin.y += 0.12
+		route.recovery_overrides[glide_section.airborne_checkpoint] = recovery_pose
 	_build_graybox()
 	RaceManager.configure(route, 3)
 	if cpu_count > 0:
@@ -40,6 +49,8 @@ func _setup_items() -> void:
 	items = RaceItems.new()
 	items.name = "Items"
 	items.random_seed = item_random_seed
+	if glide_enabled:
+		items.row_distances = PackedFloat32Array([64.0, 145.0, 201.0, 317.0])
 	add_child(items)
 	items.attach(player, &"player", false)
 	for driver: KartAI in cpu_drivers:
@@ -134,9 +145,14 @@ func _build_graybox() -> void:
 	_gate_material = _material(Color("55c8d1"))
 	_white = _material(Color("e5e9eb"))
 	_dark = _material(Color("202830"))
+	var route_distance: float = 0.0
 	for index in range(route.points.size()):
 		var a: Vector3 = route.points[index]
 		var b: Vector3 = route.points[(index + 1) % route.points.size()]
+		var along: float = route_distance
+		route_distance += a.distance_to(b)
+		if glide_enabled and along >= glide_section.ramp_start and along < glide_section.landing_start:
+			continue
 		var road_basis: Basis = Basis.looking_at((b - a).normalized(), Vector3.UP)
 		var midpoint: Vector3 = (a + b) * 0.5
 		var length: float = a.distance_to(b)
@@ -150,8 +166,41 @@ func _build_graybox() -> void:
 		# Flat, non-colliding center dashes give a readable forward route and speed reference.
 		if index % 2 == 0:
 			_box("Dash%02d" % index, Transform3D(road_basis, midpoint + Vector3.UP * 0.015), Vector3(0.16, 0.025, 1.6), _white, false)
+	if glide_enabled:
+		_build_glide_section()
 	for index in range(route.checkpoint_indices.size()):
 		_build_gate(index)
+
+func _build_glide_section() -> void:
+	var a: Vector3 = route.sample(glide_section.ramp_start).origin
+	var b: Vector3 = route.sample(glide_section.ramp_end).origin + Vector3.UP * glide_section.ramp_rise
+	var ramp_basis: Basis = Basis.looking_at((b - a).normalized(), Vector3.UP)
+	var material: Material = _material(Color("be883e"))
+	_box("LaunchRamp", Transform3D(ramp_basis, (a + b) * 0.5 - ramp_basis.y * 0.5), Vector3(route.road_width, 1, a.distance_to(b)), material)
+	var launch := GlideLaunch.new()
+	launch.name = "GlideLaunch"
+	launch.transform = route.sample(glide_section.ramp_end - 0.5)
+	launch.position.y += glide_section.ramp_rise
+	var volume := CollisionShape3D.new()
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(route.road_width, 3.0, 4.0)
+	volume.shape = shape
+	volume.position.y = 0.8
+	launch.add_child(volume)
+	add_child(launch)
+	var label := Label3D.new()
+	label.text = "AUTO GLIDE"
+	label.font_size = 72
+	label.pixel_size = 0.014
+	label.position = b + Vector3.UP * 3.4
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	add_child(label)
+	for distance: float in [glide_section.ramp_end, glide_section.landing_start]:
+		var pose: Transform3D = route.sample(distance)
+		if distance == glide_section.ramp_end:
+			pose.origin.y += glide_section.ramp_rise
+		pose.origin.y += 0.03
+		_box("GlideEdge", pose, Vector3(route.road_width, 0.06, 0.25), _white, false)
 
 func _build_gate(index: int) -> void:
 	var pose: Transform3D = route.checkpoint_transform(index)
@@ -161,9 +210,10 @@ func _build_gate(index: int) -> void:
 	gate.transform = pose
 	var volume := CollisionShape3D.new()
 	var shape := BoxShape3D.new()
-	shape.size = Vector3(route.road_width + 0.8, 4.0, 4.0)
+	var height: float = glide_section.checkpoint_height if glide_enabled and index == glide_section.airborne_checkpoint else 4.0
+	shape.size = Vector3(route.road_width + 0.8, height, 4.0)
 	volume.shape = shape
-	volume.position.y = 1.8
+	volume.position.y = height * 0.5 - 0.2
 	gate.add_child(volume)
 	add_child(gate)
 	var material: Material = _white if index == 0 else _gate_material
@@ -180,6 +230,8 @@ func _build_gate(index: int) -> void:
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	gate.add_child(label)
 	label.position.y = 5.35
+	if glide_enabled and index == glide_section.airborne_checkpoint:
+		return # No floating road stripe across the gap.
 	for column in range(14):
 		for row in range(2 if index == 0 else 1):
 			var stripe_position: Vector3 = pose.origin + pose.basis.x * (column - 6.5) + pose.basis.z * (row - 0.5) * 0.7 + Vector3.UP * 0.025

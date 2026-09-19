@@ -14,6 +14,7 @@ signal recovery_requested(reason: String)
 			_configure_stats()
 @onready var controls: KartInput = $Input
 @onready var drift: KartDrift = $DriftBoost
+@onready var glide: KartGlide = $Glide
 
 var speed: float = 0.0
 var turn_rate_degrees: float = 0.0
@@ -52,21 +53,27 @@ func _physics_process(delta: float) -> void:
 		else:
 			_reset_to_spawn()
 		return
-	drift.step(delta, controls, is_on_floor(), speed)
+	drift.step(delta, controls, is_on_floor() and not glide.active, speed)
 	_update_speed(delta)
 	var speed_fraction: float = clampf(speed / stats.top_speed, 0.0, 1.0)
 	var steering_scale: float = stats.steering_speed_curve.sample_baked(speed_fraction)
 	turn_rate_degrees = stats.low_speed_turn_rate * steering_scale * minf(speed / stats.full_steering_speed, 1.0)
-	if is_on_floor():
-		rotation.y -= deg_to_rad(turn_rate_degrees) * drift.steering_for(controls.steering) * delta
-		var grip: float = stats.drift_grip if drift.drifting else stats.normal_grip
-		_travel_direction = _travel_direction.slerp(-global_basis.z, 1.0 - exp(-grip * delta)).normalized()
-		velocity.y = -1.0
+	if glide.active:
+		glide.step(delta)
 	else:
-		velocity.y -= stats.gravity * delta
-	velocity.x = _travel_direction.x * speed
-	velocity.z = _travel_direction.z * speed
-	move_and_slide()
+		if is_on_floor():
+			rotation.y -= deg_to_rad(turn_rate_degrees) * drift.steering_for(controls.steering) * delta
+			var grip: float = stats.drift_grip if drift.drifting else stats.normal_grip
+			# Avoid a denormal rotation axis in slerp when idle directions coincide.
+			if _travel_direction.is_equal_approx(-global_basis.z):
+				_travel_direction = -global_basis.z
+			_travel_direction = _travel_direction.slerp(-global_basis.z, 1.0 - exp(-grip * delta)).normalized()
+			velocity.y = -1.0
+		else:
+			velocity.y -= stats.gravity * delta
+		velocity.x = _travel_direction.x * speed
+		velocity.z = _travel_direction.z * speed
+		move_and_slide()
 	# Feed collision-clipped velocity back into the next tick; no stored wall-speed boost.
 	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
 	speed = horizontal_velocity.length()

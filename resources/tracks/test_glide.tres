@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="GlideSection" load_steps=2 format=3]
+[ext_resource type="Script" path="res://resources/tracks/glide_section.gd" id="1"]
+[resource]
+script = ExtResource("1")
+ramp_start = 20.0
+ramp_end = 32.0
+landing_start = 48.0
+ramp_rise = 1.4
+airborne_checkpoint = 1
+checkpoint_height = 8.0
+safe_recovery_distance = 51.0

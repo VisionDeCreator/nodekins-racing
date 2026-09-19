@@ -4,6 +4,7 @@ signal item_event(event: Dictionary)
 @export var catalog: Array[ItemDefinition] = []
 @export var box_respawn_seconds: float = 4.0
 @export var random_seed: int = 0
+@export var row_distances: PackedFloat32Array = PackedFloat32Array([28.0, 145.0, 201.0, 317.0])
 var inventories: Dictionary = {}
 var boxes: Array[ItemBox] = []
 var _random := RandomNumberGenerator.new()
@@ -36,7 +37,7 @@ func attach(kart: ArcadeKart, id: StringName, cpu: bool) -> void:
 	inventories[id] = inventory
 
 func place_boxes(route: TrackRoute) -> void:
-	for distance: float in [28.0, 145.0, 201.0, 317.0]:
+	for distance: float in row_distances:
 		for lane: float in [-3.2, 0.0, 3.2]:
 			var box := BOX_SCENE.instantiate() as ItemBox
 			box.system = self
