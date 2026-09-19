@@ -1,0 +1,138 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/driving_hud.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.035, 0.05, 0.07, 0.94)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+
+[sub_resource type="StyleBoxFlat" id="MeterBackground"]
+bg_color = Color(0.16, 0.20, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[node name="DrivingHUD" type="CanvasLayer"]
+script = ExtResource("1")
+
+[node name="Title" type="Label" parent="."]
+offset_left = 30.0
+offset_top = 24.0
+theme_override_font_sizes/font_size = 24
+text = "NODEKINS  /  DRIVING LAB"
+
+[node name="Subtitle" type="Label" parent="."]
+offset_left = 31.0
+offset_top = 57.0
+theme_override_colors/font_color = Color(0.68, 0.77, 0.84, 1)
+theme_override_font_sizes/font_size = 15
+text = "PHASE 01    ·    GRAY-BOX    ·    5 m GRID"
+
+[node name="SpeedPanel" type="PanelContainer" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -339.0
+offset_top = 24.0
+offset_right = -28.0
+offset_bottom = 188.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("Panel")
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="SpeedPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 14
+
+[node name="Rows" type="VBoxContainer" parent="SpeedPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Unit" type="Label" parent="SpeedPanel/Margin/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.61, 0.71, 0.80, 1)
+text = "SPEED / m/s"
+
+[node name="Speed" type="Label" parent="SpeedPanel/Margin/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "00.0"
+
+[node name="State" type="Label" parent="SpeedPanel/Margin/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+text = "READY"
+
+[node name="Detail" type="Label" parent="SpeedPanel/Margin/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.68, 0.77, 0.84, 1)
+
+[node name="ChargePanel" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -278.0
+offset_right = 278.0
+offset_top = -147.0
+offset_bottom = -51.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Margin" type="MarginContainer" parent="ChargePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="Rows" type="VBoxContainer" parent="ChargePanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="Charge" type="Label" parent="ChargePanel/Margin/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "MINI-TURBO  /  HOLD DRIFT + STEER"
+
+[node name="Meter" type="ProgressBar" parent="ChargePanel/Margin/Rows"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+max_value = 3.0
+step = 0.001
+show_percentage = false
+theme_override_styles/background = SubResource("MeterBackground")
+
+[node name="Tiers" type="Label" parent="ChargePanel/Margin/Rows"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.77, 0.84, 1)
+theme_override_font_sizes/font_size = 14
+text = "1.0 s  ×1.30          2.0 s  ×1.45          3.0 s  ×1.60"
+
+[node name="Controls" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -600.0
+offset_right = 600.0
+offset_top = -36.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.83, 0.88, 0.94, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.06, 0.09, 0.95)
+theme_override_constants/outline_size = 5
+text = "WASD / ARROWS + SPACE drift · R reset     |     LEFT STICK + RT drive · LT brake · A / × drift · Y / △ reset"

@@ -1,0 +1,120 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/kart/kart_controller.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/handling/default_handling.tres" id="2"]
+[ext_resource type="Script" path="res://scripts/kart/kart_input.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/kart/kart_drift.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/kart/kart_visuals.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/kart/chase_camera.gd" id="6"]
+
+[sub_resource type="BoxShape3D" id="Collision"]
+size = Vector3(1.2, 0.7, 1.9)
+
+[sub_resource type="BoxMesh" id="Body"]
+size = Vector3(1.15, 0.4, 1.85)
+
+[sub_resource type="StandardMaterial3D" id="Dark"]
+albedo_color = Color(0.07, 0.08, 0.10, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="Seat"]
+material = SubResource("Dark")
+size = Vector3(0.62, 0.38, 0.65)
+
+[sub_resource type="CylinderMesh" id="Wheel"]
+material = SubResource("Dark")
+top_radius = 0.29
+bottom_radius = 0.29
+height = 0.26
+radial_segments = 12
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="NoseMaterial"]
+albedo_color = Color(0.9, 0.93, 0.97, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="Nose"]
+material = SubResource("NoseMaterial")
+size = Vector3(0.82, 0.12, 0.3)
+
+[sub_resource type="BoxMesh" id="Trail"]
+size = Vector3(0.58, 0.12, 1.0)
+
+[sub_resource type="SphereShape3D" id="CameraSweep"]
+radius = 0.18
+
+[node name="Kart" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 1
+floor_snap_length = 0.35
+floor_stop_on_slope = true
+script = ExtResource("1")
+stats = ExtResource("2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.35, 0)
+shape = SubResource("Collision")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="DriftBoost" type="Node" parent="."]
+script = ExtResource("4")
+
+[node name="Visuals" type="Node3D" parent="."]
+script = ExtResource("5")
+
+[node name="Body" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0, 0.43, 0)
+mesh = SubResource("Body")
+
+[node name="Seat" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0, 0.72, 0.15)
+mesh = SubResource("Seat")
+
+[node name="Nose" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0, 0.66, -0.72)
+mesh = SubResource("Nose")
+
+[node name="FrontLeftWheel" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(-0.68, 0.29, -0.57)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Wheel")
+
+[node name="FrontRightWheel" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0.68, 0.29, -0.57)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Wheel")
+
+[node name="RearLeftWheel" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(-0.68, 0.29, 0.6)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Wheel")
+
+[node name="RearRightWheel" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0.68, 0.29, 0.6)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Wheel")
+
+[node name="BoostTrail" type="MeshInstance3D" parent="Visuals"]
+visible = false
+position = Vector3(0, 0.3, 1.4)
+mesh = SubResource("Trail")
+
+[node name="ChaseCamera" type="Node3D" parent="." node_paths=PackedStringArray("target", "boost_source")]
+physics_interpolation_mode = 2
+script = ExtResource("6")
+target = NodePath("..")
+boost_source = NodePath("../DriftBoost")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="ChaseCamera"]
+shape = SubResource("CameraSweep")
+spring_length = 6.063827
+margin = 0.1
+collision_mask = 1
+
+[node name="Camera3D" type="Camera3D" parent="ChaseCamera/SpringArm3D"]
+current = true
+near = 0.08
+far = 500.0
+fov = 70.0

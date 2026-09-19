@@ -1,13 +1,13 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 0 setup and pipeline verification. There is no driving gameplay yet.
+Current milestone: Phase 1 core kart movement, ready for a human feel-check.
+See `docs/phase_1.md` for controls, measurements, architecture, and tuning observations.
 
 ## Current scope
 
 Windows, macOS, and Linux only. Keyboard and gamepad, with gamepad as the reference
-for handling tuning. One analog-friendly controller will consume both input sources
-in Phase 1. Mobile exports, mobile asset budgets, and touch controls are out of scope;
+for handling tuning. One analog-friendly controller consumes both input sources. Mobile exports, mobile asset budgets, and touch controls are out of scope;
 adding them would require a separate decision.
 
 The project uses Godot **4.7.2**, GDScript, Forward+, and the existing Jolt physics setting.
@@ -16,19 +16,21 @@ export templates. Older versions have not been validated.
 
 ## Run
 
-Open `project.godot` in Godot and press **F5**. The Phase 0 scene displays the Blender
-test mesh and a PASS message. The output log records its dimensions, material, and handling
-resource load. This is a pipeline check, not the Phase 1 driving prototype.
+Open `project.godot` in Godot and press **F5** to drive the flat gray-box test pad.
+Keyboard: WASD/arrows, Space to drift, R to reset. Gamepad: left stick, right trigger
+to accelerate, left trigger to brake, south face button to drift, north face button to reset.
+Hold drift while steering; release after charging cyan/amber/violet for a mini-turbo.
+The HUD shows speed, charge, tier, and boost duration.
 
 For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
 godot --headless --path . --import
-godot --headless --path . -- --phase0-check
+godot --headless --path . res://scenes/test/Verification.tscn -- --phase1-check
 ```
 
-To save a rendered diagnostic, run without `--headless` and pass
-`--phase0-screenshot=/absolute/path/to/check.png` after `--`. The parent directory must exist.
+Run the verification scene without `--headless` to also capture mid-drift and mid-boost
+PNGs in `artifacts/phase_1/`. The manual main scene never drives itself.
 On this Mac the engine executable is `/Applications/Godot.app/Contents/MacOS/Godot`.
 
 ## Desktop exports
@@ -54,13 +56,17 @@ development. Distribution signing and notarization are not part of Phase 0.
 
 | Location | Purpose |
 | --- | --- |
-| `scenes/phase_0/connection_check.tscn` | Main scene, originally created through Godot MCP |
+| `scenes/test/TestPlane.tscn` | Manual driving lab, the current main scene |
+| `scenes/kart/Kart.tscn` | Reusable CharacterBody3D kart and components |
+| `scenes/test/Verification.tscn` | Automated in-engine acceptance drive |
+| `scenes/phase_0/connection_check.tscn` | Retained Blender pipeline check |
 | `tools/phase_0/connection_check.gd` | Startup diagnostics only |
 | `resources/handling/default_handling.tres` | Editable starting handling values and curves |
 | `resources/handling/kart_handling.gd` | Data-only Resource schema |
 | `assets/phase_0/pipeline_test.glb` | Blender MCP test export consumed by Godot |
 | `source_assets/phase_0/pipeline_test.blend` | Versioned source snapshot; excluded from Godot import |
-| `docs/phase_0.md` | Verification results and next-phase constraints |
+| `docs/phase_0.md` | Historical setup verification |
+| `docs/phase_1.md` | Current implementation, verification, and tuning handoff |
 
 The editable asset workspace copy is
 `/Users/shane/Gaming/Assets/nodekins-racing/phase_0/pipeline_test.blend`.

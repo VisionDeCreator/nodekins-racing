@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/test/TestPlane.tscn" id="1"]
+[ext_resource type="Script" path="res://tools/phase_1/verify_driving.gd" id="2"]
+
+[node name="Phase1Verification" type="Node"]
+script = ExtResource("2")
+
+[node name="DrivingLab" parent="." instance=ExtResource("1")]
