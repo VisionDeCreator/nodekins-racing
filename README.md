@@ -1,8 +1,9 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 1 core kart movement, ready for a human feel-check.
-See `docs/phase_1.md` for controls, measurements, architecture, and tuning observations.
+Current milestone: Phase 2 track systems. A gray-box oval now runs a three-lap race
+with countdown, ordered checkpoints, positions, and checkpoint recovery.
+See `docs/phase_2.md` for race rules, interfaces, verification, and race-state snapshots.
 
 ## Current scope
 
@@ -16,21 +17,23 @@ export templates. Older versions have not been validated.
 
 ## Run
 
-Open `project.godot` in Godot and press **F5** to drive the flat gray-box test pad.
-Keyboard: WASD/arrows, Space to drift, R to reset. Gamepad: left stick, right trigger
+Open `project.godot` in Godot and press **F5** to race Loop 01. The 3–2–1–GO countdown
+locks input; pass CP1–CP7 and start/finish in order for three laps. Enter/gamepad Start
+restarts the race. The flat Phase 1 driving lab remains at `scenes/test/TestPlane.tscn`.
+Keyboard: WASD/arrows, Space to drift, R for checkpoint recovery. Gamepad: left stick, right trigger
 to accelerate, left trigger to brake, south face button to drift, north face button to reset.
 Hold drift while steering; release after charging cyan/amber/violet for a mini-turbo.
-The HUD shows speed, charge, tier, and boost duration.
+The HUD shows lap, position, timer, last/next checkpoint, speed, and mini-turbo charge.
 
 For a repeatable check from the repository root (`godot` must be on PATH):
 
 ```sh
 godot --headless --path . --import
-godot --headless --path . res://scenes/test/Verification.tscn -- --phase1-check
+godot --headless --path . res://scenes/test/RaceVerification.tscn -- --phase2-check
 ```
 
-Run the verification scene without `--headless` to also capture mid-drift and mid-boost
-PNGs in `artifacts/phase_1/`. The manual main scene never drives itself.
+Run the verification scene without `--headless` to also capture the track layout, countdown, and finish
+PNGs in `artifacts/phase_2/`. The manual main scene never drives itself.
 On this Mac the engine executable is `/Applications/Godot.app/Contents/MacOS/Godot`.
 
 ## Desktop exports
@@ -56,7 +59,11 @@ development. Distribution signing and notarization are not part of Phase 0.
 
 | Location | Purpose |
 | --- | --- |
-| `scenes/test/TestPlane.tscn` | Manual driving lab, the current main scene |
+| `scenes/track/Track.tscn` | Current main scene: three-lap gray-box race |
+| `scripts/race/race_manager.gd` | RaceManager autoload, shared queries and signals |
+| `resources/tracks/oval.tres` | Track centerline and ordered checkpoint locations |
+| `scenes/test/RaceVerification.tscn` | Full-race, fault, and multi-kart acceptance checks |
+| `scenes/test/TestPlane.tscn` | Retained Phase 1 manual driving lab |
 | `scenes/kart/Kart.tscn` | Reusable CharacterBody3D kart and components |
 | `scenes/test/Verification.tscn` | Automated in-engine acceptance drive |
 | `scenes/phase_0/connection_check.tscn` | Retained Blender pipeline check |
@@ -66,7 +73,8 @@ development. Distribution signing and notarization are not part of Phase 0.
 | `assets/phase_0/pipeline_test.glb` | Blender MCP test export consumed by Godot |
 | `source_assets/phase_0/pipeline_test.blend` | Versioned source snapshot; excluded from Godot import |
 | `docs/phase_0.md` | Historical setup verification |
-| `docs/phase_1.md` | Current implementation, verification, and tuning handoff |
+| `docs/phase_1.md` | Phase 1 movement implementation and tuning handoff |
+| `docs/phase_2.md` | Current race implementation and verification |
 
 The editable asset workspace copy is
 `/Users/shane/Gaming/Assets/nodekins-racing/phase_0/pipeline_test.blend`.

@@ -14,6 +14,20 @@ var _override_enabled: bool = false
 var _command: Vector3 = Vector3.ZERO
 var _command_drift: bool = false
 var _command_reset: bool = false
+var _locked: bool = false
+
+## An authoritative race lock, applied after either human or injected commands are sampled.
+func set_locked(value: bool) -> void:
+	_locked = value
+	if value:
+		throttle = 0.0
+		brake = 1.0
+		steering = 0.0
+		drift_held = false
+		reset_pressed = false
+
+func is_locked() -> bool:
+	return _locked
 
 func set_command(accelerate: float, braking: float, steer: float, drift: bool, reset: bool = false) -> void:
 	_override_enabled = true
@@ -39,6 +53,9 @@ func sample(delta: float) -> void:
 		target_steering = Input.get_axis("kart_left", "kart_right")
 		drift_held = Input.is_action_pressed("kart_drift")
 		reset_pressed = Input.is_action_just_pressed("kart_reset")
+	if _locked:
+		set_locked(true)
+		return
 	steering = lerpf(steering, target_steering, 1.0 - exp(-steering_response * delta))
 	if absf(steering) < 0.001:
 		steering = 0.0

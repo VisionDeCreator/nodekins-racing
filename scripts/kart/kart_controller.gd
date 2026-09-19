@@ -4,6 +4,8 @@ extends CharacterBody3D
 
 signal respawned
 signal stats_changed(value: KartHandling)
+## Optional external recovery owner. Without a subscriber, Phase 1's local reset remains.
+signal recovery_requested(reason: String)
 
 @export var stats: KartHandling:
 	set(value):
@@ -17,6 +19,7 @@ var speed: float = 0.0
 var turn_rate_degrees: float = 0.0
 var _travel_direction: Vector3 = Vector3.FORWARD
 var _spawn: Transform3D
+var _recovery_pending: bool = false
 
 func _ready() -> void:
 	_spawn = global_transform
@@ -40,8 +43,14 @@ func _configure_stats() -> void:
 
 func _physics_process(delta: float) -> void:
 	controls.sample(delta)
+	if _recovery_pending:
+		return
 	if controls.reset_pressed or global_position.y < -8.0:
-		_reset_to_spawn()
+		if recovery_requested.has_connections():
+			_recovery_pending = true
+			recovery_requested.emit("manual reset" if controls.reset_pressed else "fell off track")
+		else:
+			_reset_to_spawn()
 		return
 	drift.step(delta, controls, is_on_floor(), speed)
 	_update_speed(delta)
@@ -92,7 +101,12 @@ func _update_speed(delta: float) -> void:
 		speed = minf(target_speed, target_speed * stats.acceleration_curve.sample_baked(next_time))
 
 func _reset_to_spawn() -> void:
-	global_transform = _spawn
+	respawn_at(_spawn)
+
+## Public race/track boundary; resets motion and notifies the independent camera.
+func respawn_at(destination: Transform3D) -> void:
+	global_transform = destination
+	_recovery_pending = false
 	velocity = Vector3.ZERO
 	speed = 0.0
 	turn_rate_degrees = 0.0

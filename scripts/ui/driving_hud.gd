@@ -18,7 +18,7 @@ func _ready() -> void:
 	_fill.corner_radius_bottom_left = 4
 	_fill.corner_radius_bottom_right = 4
 	meter.add_theme_stylebox_override("fill", _fill)
-	print("[Phase 1] Test plane ready. Keyboard/gamepad -> shared KartInput. CharacterBody3D + independent drift and chase camera.")
+	print("[Kart] Driving HUD ready. Keyboard/gamepad -> shared KartInput. CharacterBody3D + independent drift and chase camera.")
 
 func _process(_delta: float) -> void:
 	var drift: KartDrift = kart.drift
