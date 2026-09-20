@@ -1,11 +1,12 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 7 audio. The complete menu/race/results flow now has original
-placeholder music, spatial engine loops, drift/boost/glide/impact and item sounds,
-countdown/lap cues and placement-dependent results jingles. Options controls and
-saves separate Music, SFX and Engine volumes. Full kart/character customization
-continues to use its persistent 13-byte ID-only profile.
+Current milestone: Phase 8a dedicated-server movement prototype. The isolated
+`prototypes/networking` project proves predicted local movement, authoritative
+replay/correction and interpolated remote karts with two clients. The full single-player
+race project retains its art, customization and audio unchanged.
+See `docs/phase_8a.md` for direct server/client commands, latency testing, verification
+and the remaining work to integrate the real kart controller.
 See `docs/phase_7.md` for audio ownership, triggers and recorded verification,
 `docs/phase_6_5.md` for the profile contract, registries and customization verification,
 `docs/phase_6.md` for the flow, selection catalog and verification,
@@ -90,6 +91,9 @@ development. Distribution signing and notarization are not part of Phase 0.
 
 | Location | Purpose |
 | --- | --- |
+| `prototypes/networking/` | Separate headless-server / predicted-client movement laboratory |
+| `tools/phase_8a/verify_networking.py` | Three-process latency, replay, smoothing and position checks |
+| `docs/phase_8a.md` | Network protocol, run commands, verification and full-kart migration |
 | `scenes/audio/` | Object-owned kart, track and menu audio players |
 | `scripts/audio/` | Signal listeners, volume preferences, Options controls and clean shutdown |
 | `assets/audio/` | 23 original placeholder WAVs and provenance/loop manifest |
@@ -181,4 +185,4 @@ and their design co-pilot; provisional values must be identified.
 Future multiplayer is client-server online racing. Customization profiles are compact,
 versioned, integer ID-based data covering kart parts/colors and hair, eyes, shirt, pants, shoes,
 and skin tone. Profile IDs resolve to local assets; network payloads must not contain
-asset paths. Racers must see each other's profiles. Networking implementation remains deferred to Phase 8. Optional split-screen does not drive the architecture.
+asset paths. Racers must see each other's profiles. Phase 8a prototypes movement in isolation; production race networking remains the next integration step. Optional split-screen does not drive the architecture.
