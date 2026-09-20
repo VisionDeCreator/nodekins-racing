@@ -291,4 +291,4 @@ func _finish() -> void:
 	file.close()
 	print("[Phase 6.5 verification] %s checks=%d failures=%s" % ["PASS" if failures.is_empty() else "FAIL",checks,failures])
 	if OS.get_cmdline_user_args().has("--phase65-check"):
-		get_tree().quit(0 if failures.is_empty() else 1)
+		flow.get_node("MenuAudio").request_quit(0 if failures.is_empty() else 1)

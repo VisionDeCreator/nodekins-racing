@@ -19,6 +19,10 @@ signal recovery_requested(reason: String)
 @onready var drift: KartDrift = $DriftBoost
 @onready var glide: KartGlide = $Glide
 
+## Opt-in online driver: single-player continues to use _physics_process unchanged.
+var network_driven: bool = false
+var network_replaying: bool = false
+var _network_floor: int = -1
 var speed: float = 0.0
 var turn_rate_degrees: float = 0.0
 var _travel_direction: Vector3 = Vector3.FORWARD
@@ -46,6 +50,11 @@ func _configure_stats() -> void:
 	stats_changed.emit(stats)
 
 func _physics_process(delta: float) -> void:
+	if not network_driven:
+		simulate_step(delta)
+
+## Same movement implementation for offline, dedicated authority and owner prediction.
+func simulate_step(delta: float) -> void:
 	controls.sample(delta)
 	if _recovery_pending:
 		return
@@ -56,7 +65,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			_reset_to_spawn()
 		return
-	drift.step(delta, controls, is_on_floor() and not glide.active, speed)
+	drift.step(delta, controls, has_ground_contact() and not glide.active, speed)
 	_update_speed(delta)
 	var speed_fraction: float = clampf(speed / stats.top_speed, 0.0, 1.0)
 	var steering_scale: float = stats.steering_speed_curve.sample_baked(speed_fraction)
@@ -65,7 +74,7 @@ func _physics_process(delta: float) -> void:
 	if glide.active:
 		glide.step(delta)
 	else:
-		if is_on_floor():
+		if has_ground_contact():
 			rotation.y -= deg_to_rad(turn_rate_degrees) * drift.steering_for(controls.steering) * delta
 			var grip: float = stats.drift_grip if drift.drifting else stats.normal_grip
 			# Avoid a denormal rotation axis in slerp when idle directions coincide.
@@ -79,6 +88,7 @@ func _physics_process(delta: float) -> void:
 		velocity.z = _travel_direction.z * speed
 		incoming_velocity = velocity
 		move_and_slide()
+	_network_floor = -1
 	# Feed collision-clipped velocity back into the next tick; no stored wall-speed boost.
 	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
 	speed = horizontal_velocity.length()
@@ -133,3 +143,41 @@ func respawn_at(destination: Transform3D) -> void:
 	reset_physics_interpolation()
 	respawned.emit()
 	motion_updated.emit(0.0, 0.0, 1.0)
+
+## CharacterBody floor status is engine-owned. Restore one explicit ground-contact sample
+## for gameplay decisions; move_and_slide refreshes it from the real collision world.
+func has_ground_contact() -> bool:
+	return _network_floor == 1 if _network_floor >= 0 else is_on_floor()
+
+func network_snapshot() -> Dictionary:
+	return {"pose":global_transform,"velocity":velocity,"speed":speed,"turn":turn_rate_degrees,
+		"travel":_travel_direction,"recovery":_recovery_pending,"ground":has_ground_contact(),
+		"snap":floor_snap_length,"controls":controls.network_snapshot(),
+		"drift":drift.network_snapshot(),"glide":glide.network_snapshot()}
+
+func network_restore(state: Dictionary, refresh_contact: bool = true) -> void:
+	global_transform = state.pose
+	velocity = state.velocity
+	speed = state.speed
+	turn_rate_degrees = state.turn
+	_travel_direction = state.travel
+	_recovery_pending = state.recovery
+	floor_snap_length = state.snap
+	controls.network_restore(state.controls)
+	drift.network_restore(state.drift)
+	glide.network_restore(state.glide)
+	_network_floor = 1 if state.ground else 0
+	if refresh_contact:
+		# Seed Jolt's internal contact cache without keeping the probe displacement.
+		velocity = Vector3.DOWN * .01 if state.ground else Vector3.ZERO
+		move_and_slide()
+		global_transform = state.pose
+		velocity = state.velocity
+	reset_physics_interpolation()
+
+func network_mute_signals(value: bool) -> void:
+	network_replaying = value
+	set_block_signals(value)
+	controls.set_block_signals(value)
+	drift.set_block_signals(value)
+	glide.set_block_signals(value)

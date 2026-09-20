@@ -37,6 +37,8 @@ func snap_to_target() -> void:
 
 func _process(delta: float) -> void:
 	var pose: Transform3D = target.get_global_transform_interpolated()
+	if target.has_meta(&"online_render_pose"):
+		pose = target.get_meta(&"online_render_pose")
 	var desired_position: Vector3 = pose.origin - pose.basis.z * _stats.camera_look_ahead + Vector3.UP * 0.6
 	# Compensate steady travel lag so damping does not stretch a 4.5 m chase to 7 m on boost.
 	var horizontal_velocity := Vector3(target.velocity.x, 0.0, target.velocity.z)

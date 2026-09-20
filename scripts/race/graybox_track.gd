@@ -4,6 +4,7 @@ extends Node3D
 
 const KART_SCENE: PackedScene = preload("res://scenes/kart/Kart.tscn")
 const CPU_TUNING: AITuning = preload("res://resources/ai/default_ai.tres")
+@export var external_race_management: bool = false
 @export_range(0, 3) var cpu_count: int = 3
 @export var boost_pads_enabled: bool = true
 @export var art_enabled: bool = true
@@ -32,6 +33,8 @@ func _ready() -> void:
 		recovery_pose.origin.y += 0.12
 		route.recovery_overrides[glide_section.airborne_checkpoint] = recovery_pose
 	_build_graybox()
+	if external_race_management:
+		return # Online mode owns roster/countdown/items; the geometry is identical.
 	RaceManager.configure(route, 3)
 	if cpu_count > 0:
 		player.global_position.x -= 2.7

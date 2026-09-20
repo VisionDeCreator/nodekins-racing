@@ -86,3 +86,22 @@ func sample(delta: float) -> void:
 
 func reset_smoothing() -> void:
 	steering = 0.0
+
+## Raw normalized command, before the shared smoothing/lock/suppression step.
+func network_command() -> PackedFloat32Array:
+	if _override_enabled:
+		return PackedFloat32Array([_command.x,_command.y,_command.z,float(_command_drift),float(_command_reset),float(_item_queued)])
+	return PackedFloat32Array([Input.get_action_strength("kart_accelerate"),Input.get_action_strength("kart_brake"),Input.get_axis("kart_left","kart_right"),float(Input.is_action_pressed("kart_drift")),float(Input.is_action_just_pressed("kart_reset")),float(Input.is_action_just_pressed("kart_item"))])
+
+func network_snapshot() -> Dictionary:
+	return {"throttle":throttle,"brake":brake,"steering":steering,"drift":drift_held,"locked":_locked,"suppression":suppression_remaining}
+
+func network_restore(state: Dictionary) -> void:
+	throttle = state.throttle
+	brake = state.brake
+	steering = state.steering
+	drift_held = state.drift
+	_locked = state.locked
+	suppression_remaining = state.suppression
+	_item_queued = false
+	reset_pressed = false

@@ -14,6 +14,8 @@ signal recovery_completed(racer_id: StringName, checkpoint: int)
 enum Phase { IDLE, COUNTDOWN, RACING, FINISHED }
 const RECOVERY_DELAY: float = 0.9
 const STUCK_DELAY: float = 2.5
+var replica_mode: bool = false
+var _replicated_rows: Array[Dictionary] = []
 var phase: Phase = Phase.IDLE
 var total_laps: int = 3
 var elapsed: float = 0.0
@@ -85,6 +87,8 @@ func clear_race() -> void:
 	countdown_text = ""
 
 func start_race() -> void:
+	if replica_mode:
+		return
 	if route == null or _racers.is_empty():
 		return
 	elapsed = 0.0
@@ -116,6 +120,8 @@ func start_race() -> void:
 	_set_countdown("3")
 
 func _physics_process(delta: float) -> void:
+	if replica_mode:
+		return
 	if phase == Phase.COUNTDOWN:
 		_countdown_remaining = maxf(0.0, _countdown_remaining - delta)
 		if _countdown_remaining <= 0.00001:
@@ -167,6 +173,8 @@ func _physics_process(delta: float) -> void:
 	_rank()
 
 func report_checkpoint(kart: ArcadeKart, checkpoint: int, forward_crossing: bool) -> void:
+	if replica_mode:
+		return
 	if phase != Phase.RACING or not _body_ids.has(kart.get_instance_id()):
 		return
 	var racer: RacerProgress = _racers[_body_ids[kart.get_instance_id()]]
@@ -207,6 +215,8 @@ func report_checkpoint(kart: ArcadeKart, checkpoint: int, forward_crossing: bool
 	_check_race_finished()
 
 func request_recovery(racer_id: StringName, reason: String = "manual reset") -> void:
+	if replica_mode:
+		return
 	if phase != Phase.RACING or not _racers.has(racer_id):
 		return
 	var racer: RacerProgress = _racers[racer_id]
@@ -274,6 +284,11 @@ func _set_countdown(text: String) -> void:
 		countdown_changed.emit(text)
 
 func get_racer_state(racer_id: StringName) -> Dictionary:
+	if replica_mode:
+		for row: Dictionary in _replicated_rows:
+			if row.id == str(racer_id):
+				return row.duplicate(true)
+		return {}
 	if not _racers.has(racer_id):
 		return {}
 	var racer: RacerProgress = _racers[racer_id]
@@ -288,8 +303,28 @@ func get_racer_state(racer_id: StringName) -> Dictionary:
 		"finish_time": racer.finish_time, "finish_order": racer.finish_order, "lap_times": racer.lap_times.duplicate()}
 
 func get_standings() -> Array[Dictionary]:
+	if replica_mode:
+		return _replicated_rows.duplicate(true)
 	var snapshots: Array[Dictionary] = []
 	for racer_id in _racers:
 		snapshots.append(get_racer_state(racer_id))
 	snapshots.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.position) < int(b.position))
 	return snapshots
+
+## Explicit online read model. Clients cannot count gates, recover or start races.
+func set_replica_mode(value: bool) -> void:
+	clear_race()
+	replica_mode = value
+	_replicated_rows.clear()
+
+func online_snapshot() -> Dictionary:
+	return {"phase":int(phase),"elapsed":elapsed,"countdown":countdown_text,"laps":total_laps,"rows":get_standings()}
+
+func apply_online_snapshot(state: Dictionary) -> void:
+	if not replica_mode:
+		return
+	phase = state.phase as Phase
+	elapsed = state.elapsed
+	total_laps = state.laps
+	countdown_text = state.countdown
+	_replicated_rows.assign(state.rows)

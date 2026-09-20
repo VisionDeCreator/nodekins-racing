@@ -3,6 +3,7 @@ extends Node
 signal changed
 signal item_used(item: ItemDefinition)
 signal item_hit(item: ItemDefinition)
+var replica_mode: bool = false
 var system: RaceItems
 var racer_id: StringName
 var cpu_controlled: bool = false
@@ -19,6 +20,8 @@ func _ready() -> void:
 	RaceManager.racer_finished.connect(_finished)
 
 func _physics_process(delta: float) -> void:
+	if replica_mode:
+		return
 	immunity_remaining = maxf(0.0, immunity_remaining - delta)
 	if held != null and can_act():
 		held_seconds += delta
@@ -30,6 +33,8 @@ func can_act() -> bool:
 	return not state.is_empty() and RaceManager.phase == RaceManager.Phase.RACING and not state.finished and not state.respawning and not kart.controls.is_locked()
 
 func receive(item: ItemDefinition) -> bool:
+	if replica_mode:
+		return false
 	if held != null or item == null or not can_act():
 		return false
 	held = item
@@ -38,6 +43,8 @@ func receive(item: ItemDefinition) -> bool:
 	return true
 
 func use_item() -> void:
+	if replica_mode:
+		return
 	if held == null or not can_act():
 		return
 	var item: ItemDefinition = held
@@ -49,6 +56,8 @@ func use_item() -> void:
 		item_used.emit(item)
 
 func take_hit(source: StringName, item: ItemDefinition, effect: DeployItemEffect) -> bool:
+	if replica_mode:
+		return false
 	if not can_act() or immunity_remaining > 0.0:
 		return false
 	var before: float = kart.speed
@@ -82,5 +91,17 @@ func reset() -> void:
 	changed.emit()
 
 func _finished(id: StringName, _position: int, _time: float) -> void:
+	if replica_mode:
+		return
 	if id == racer_id:
 		reset()
+
+func network_apply(item: ItemDefinition, seconds: float, immunity: float) -> void:
+	if not replica_mode:
+		return
+	var changed_item: bool = held != item
+	held = item
+	held_seconds = seconds
+	immunity_remaining = immunity
+	if changed_item:
+		changed.emit()

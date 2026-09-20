@@ -83,3 +83,16 @@ func _cancel_drift() -> void:
 	tier = 0
 	if was_drifting:
 		drift_ended.emit()
+
+func network_snapshot() -> Array:
+	return [drifting,direction,charge_time,tier,boost_tier,boost_remaining,boost_duration,boost_multiplier]
+
+func network_restore(state: Array) -> void:
+	drifting = state[0]
+	direction = state[1]
+	charge_time = state[2]
+	tier = state[3]
+	boost_tier = state[4]
+	boost_remaining = state[5]
+	boost_duration = state[6]
+	boost_multiplier = state[7]

@@ -1,12 +1,13 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 8a dedicated-server movement prototype. The isolated
-`prototypes/networking` project proves predicted local movement, authoritative
-replay/correction and interpolated remote karts with two clients. The full single-player
-race project retains its art, customization and audio unchanged.
-See `docs/phase_8a.md` for direct server/client commands, latency testing, verification
-and the remaining work to integrate the real kart controller.
+Current milestone: Phase 8b full dedicated-server racing. A separate online entry
+point runs the real kart, track, three laps, items, glide and ID-based customization
+with predicted local movement and server authority. Server-controlled AI fills the
+four-kart grid. The existing single-player title/menu/race flow remains available.
+See `docs/phase_8b.md` for direct server/client commands, protocol ownership,
+disconnect behavior and latency verification. The isolated Phase 8a movement lab
+is retained under `prototypes/networking`.
 See `docs/phase_7.md` for audio ownership, triggers and recorded verification,
 `docs/phase_6_5.md` for the profile contract, registries and customization verification,
 `docs/phase_6.md` for the flow, selection catalog and verification,
@@ -91,6 +92,9 @@ development. Distribution signing and notarization are not part of Phase 0.
 
 | Location | Purpose |
 | --- | --- |
+| `scenes/network/` / `scripts/network/` | Full dedicated online race and client prediction/presentation adapters |
+| `tools/phase_8b/verify_online.py` | Three-process full-race, item/profile/state agreement and disconnect verification |
+| `docs/phase_8b.md` | Direct-connect commands, protocol, migration details and verification |
 | `prototypes/networking/` | Separate headless-server / predicted-client movement laboratory |
 | `tools/phase_8a/verify_networking.py` | Three-process latency, replay, smoothing and position checks |
 | `docs/phase_8a.md` | Network protocol, run commands, verification and full-kart migration |
@@ -182,7 +186,7 @@ audio → online multiplayer → polish. Each phase ends in an in-engine verifie
 result before the next begins. Design and balance specifications come from the user
 and their design co-pilot; provisional values must be identified.
 
-Future multiplayer is client-server online racing. Customization profiles are compact,
+Online multiplayer uses a dedicated client-server architecture. Customization profiles are compact,
 versioned, integer ID-based data covering kart parts/colors and hair, eyes, shirt, pants, shoes,
 and skin tone. Profile IDs resolve to local assets; network payloads must not contain
-asset paths. Racers must see each other's profiles. Phase 8a prototypes movement in isolation; production race networking remains the next integration step. Optional split-screen does not drive the architecture.
+asset paths. Racers must see each other's profiles. Phase 8b integrates the full race; matchmaking and lobby flow remain Phase 8c. Optional split-screen does not drive the architecture.

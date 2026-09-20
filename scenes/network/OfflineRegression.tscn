@@ -1,0 +1,5 @@
+[gd_scene load_steps=3 format=3]
+[ext_resource type="PackedScene" path="res://scenes/test/AudioVerification.tscn" id="1"]
+[ext_resource type="Script" path="res://tools/phase_8b/offline_audio_regression.gd" id="2"]
+[node name="OfflineRegression" instance=ExtResource("1")]
+script = ExtResource("2")

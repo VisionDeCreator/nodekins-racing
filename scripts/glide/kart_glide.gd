@@ -21,7 +21,7 @@ func _ready() -> void:
 	kart.respawned.connect(reset)
 
 func try_launch() -> bool:
-	if active or kart.controls.is_locked() or not kart.is_on_floor() or kart.speed < kart.stats.glide_minimum_launch_speed:
+	if active or kart.controls.is_locked() or not kart.has_ground_contact() or kart.speed < kart.stats.glide_minimum_launch_speed:
 		return false
 	active = true
 	flight_time = 0.0
@@ -35,7 +35,8 @@ func try_launch() -> bool:
 	kart.velocity.y = kart.stats.glide_launch_velocity
 	kart.floor_snap_length = 0.0
 	canopy.show()
-	print("[Glide launch] %s speed=%.2f height=%.2f" % [kart.name, kart.speed, kart.global_position.y])
+	if not kart.network_replaying:
+		print("[Glide launch] %s speed=%.2f height=%.2f" % [kart.name, kart.speed, kart.global_position.y])
 	launched.emit()
 	return true
 
@@ -70,7 +71,8 @@ func _finish(reason: String, speed_before_contact: float) -> void:
 		"horizontal_distance": Vector2(kart.global_position.x - _entry_position.x, kart.global_position.z - _entry_position.z).length(),
 		"speed_before_contact": speed_before_contact, "speed_after_contact": Vector2(kart.velocity.x, kart.velocity.z).length(),
 		"landing_height": kart.global_position.y}
-	print("[Glide end] %s %s" % [kart.name, JSON.stringify(last_flight)])
+	if not kart.network_replaying:
+		print("[Glide end] %s %s" % [kart.name, JSON.stringify(last_flight)])
 	ended.emit(last_flight.duplicate())
 
 func reset() -> void:
@@ -81,3 +83,20 @@ func reset() -> void:
 	kart.floor_snap_length = _floor_snap
 	canopy.hide()
 	canopy.rotation = Vector3.ZERO
+
+func network_snapshot() -> Dictionary:
+	return {"active":active,"time":flight_time,"direction":_direction,"yaw":_launch_yaw,
+		"speed":_entry_speed,"position":_entry_position,"peak":_peak_height,"floor_snap":_floor_snap,
+		"bank":canopy.rotation.z}
+
+func network_restore(state: Dictionary) -> void:
+	active = state.active
+	flight_time = state.time
+	_direction = state.direction
+	_launch_yaw = state.yaw
+	_entry_speed = state.speed
+	_entry_position = state.position
+	_peak_height = state.peak
+	_floor_snap = state.floor_snap
+	canopy.visible = active
+	canopy.rotation.z = state.bank

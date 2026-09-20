@@ -1,4 +1,5 @@
 extends Node
+@export var local_racer_id: StringName = &"player"
 func _ready() -> void:
 	RaceManager.countdown_changed.connect(_countdown)
 	RaceManager.lap_completed.connect(_lap)
@@ -13,7 +14,7 @@ func _countdown(text: String) -> void:
 		$Countdown.trigger(&"go",preload("res://assets/audio/go.wav"))
 
 func _lap(id: StringName, completed: int, _time: float) -> void:
-	if id == &"player" and completed < RaceManager.total_laps:
+	if id == local_racer_id and completed < RaceManager.total_laps:
 		$Lap.trigger(&"lap",preload("res://assets/audio/lap.wav"),1.0 if completed == 1 else 1.12)
 
 func _finished() -> void:
