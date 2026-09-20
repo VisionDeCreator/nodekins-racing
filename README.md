@@ -1,13 +1,14 @@
 # Nodekins Racing
 
 Original arcade kart racer built in Godot, with original art authored in Blender.
-Current milestone: Phase 8b full dedicated-server racing. A separate online entry
-point runs the real kart, track, three laps, items, glide and ID-based customization
-with predicted local movement and server authority. Server-controlled AI fills the
-four-kart grid. The existing single-player title/menu/race flow remains available.
-See `docs/phase_8b.md` for direct server/client commands, protocol ownership,
-disconnect behavior and latency verification. The isolated Phase 8a movement lab
-is retained under `prototypes/networking`.
+Current milestone: Phase 8c server-driven matchmaking. **Race Online → Find Match**
+queues players with their saved customization; the service groups them, randomly
+chooses a registered track and launches a dedicated race. There is one active
+worker slot, with cancel/retry and bounded admission fallback. The existing
+single-player title/menu/race flow remains available through Play.
+See `docs/phase_8c.md` for service setup, lifecycle behavior and verification, and
+`docs/phase_8b.md` for full-race network authority and prediction. The isolated
+Phase 8a movement lab is retained under `prototypes/networking`.
 See `docs/phase_7.md` for audio ownership, triggers and recorded verification,
 `docs/phase_6_5.md` for the profile contract, registries and customization verification,
 `docs/phase_6.md` for the flow, selection catalog and verification,
@@ -29,7 +30,10 @@ export templates. Older versions have not been validated.
 
 ## Run
 
-Open `project.godot` in Godot and press **F5** for the title screen. Choose Play, a
+Open `project.godot` in Godot and press **F5** for the title screen. For online play,
+start the separate matchmaking service as described in `docs/phase_8c.md`, then
+choose **Race Online → Find Match**. The server handles grouping and track selection.
+For single-player, choose Play, a
 male/female body, then Customize Character or Customize Kart. Choose parts with the
 carousels and colors with palette swatches. Show Glider previews the deployed wing.
 Continue to Skyline Loop (the existing Loop 01), then Start Race.
@@ -92,6 +96,10 @@ development. Distribution signing and notarization are not part of Phase 0.
 
 | Location | Purpose |
 | --- | --- |
+| `scenes/matchmaking/` / `scripts/matchmaking/` | Separate queue service, ticket admission and matched-session bootstrap |
+| `resources/matchmaking/` | Service endpoint, minimum players and lifecycle timeouts |
+| `tools/phase_8c/verify_matchmaking.py` | Full menu-to-match, cancel/retry, failure and repeat-match checks |
+| `docs/phase_8c.md` | Matchmaking setup, worker model and verification |
 | `scenes/network/` / `scripts/network/` | Full dedicated online race and client prediction/presentation adapters |
 | `tools/phase_8b/verify_online.py` | Three-process full-race, item/profile/state agreement and disconnect verification |
 | `docs/phase_8b.md` | Direct-connect commands, protocol, migration details and verification |
@@ -189,4 +197,4 @@ and their design co-pilot; provisional values must be identified.
 Online multiplayer uses a dedicated client-server architecture. Customization profiles are compact,
 versioned, integer ID-based data covering kart parts/colors and hair, eyes, shirt, pants, shoes,
 and skin tone. Profile IDs resolve to local assets; network payloads must not contain
-asset paths. Racers must see each other's profiles. Phase 8b integrates the full race; matchmaking and lobby flow remain Phase 8c. Optional split-screen does not drive the architecture.
+asset paths. Racers must see each other's profiles. Phase 8b integrates the full race; Phase 8c adds server-driven matchmaking without player hosting or online track selection. Optional split-screen does not drive the architecture.

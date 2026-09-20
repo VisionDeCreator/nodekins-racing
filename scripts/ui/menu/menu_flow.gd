@@ -25,6 +25,8 @@ var _custom_values: Dictionary = {}
 var _save_status: Label
 var _deployed: bool = false
 var audio_options: AudioOptions
+var online_status: Label
+var online_elapsed: Label
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -39,7 +41,11 @@ func _ready() -> void:
 	_ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	RaceManager.race_finished.connect(_race_finished)
-	show_title()
+	Matchmaking.changed.connect(_refresh_online)
+	if Matchmaking.state == "error":
+		show_online()
+	else:
+		show_title()
 
 func _clear_ui() -> void:
 	for child: Node in _ui.get_children():
@@ -116,10 +122,14 @@ func _footer() -> void:
 	_page.add_child(RacingUISkin.label("ARROWS / D-PAD  Navigate     ENTER / A  Select     ESC / B  Back",14,RacingUISkin.MUTED))
 
 func _focus(id: StringName) -> void:
-	for index in range(_button_order.size()):
-		var button: Button = _button_order[index]
-		var previous: NodePath = button.get_path_to(_button_order[posmod(index-1,_button_order.size())])
-		var next: NodePath = button.get_path_to(_button_order[(index+1)%_button_order.size()])
+	var active_buttons: Array[Button] = []
+	for candidate: Button in _button_order:
+		if candidate.visible and not candidate.disabled:
+			active_buttons.append(candidate)
+	for index in range(active_buttons.size()):
+		var button: Button = active_buttons[index]
+		var previous: NodePath = button.get_path_to(active_buttons[posmod(index-1,active_buttons.size())])
+		var next: NodePath = button.get_path_to(active_buttons[(index+1)%active_buttons.size()])
 		button.focus_neighbor_top = previous
 		button.focus_neighbor_left = previous
 		button.focus_previous = previous
@@ -153,6 +163,7 @@ func show_title() -> void:
 	gap.custom_minimum_size.y = 10
 	left.add_child(gap)
 	_button(left,&"play","PLAY   →",show_characters,true)
+	_button(left,&"online","Race Online",show_online)
 	var lower := HBoxContainer.new()
 	left.add_child(lower)
 	_button(lower,&"options","Options",show_options)
@@ -164,6 +175,41 @@ func show_title() -> void:
 	_footer()
 	_set_screen(&"title")
 	_focus(&"play")
+
+func show_online() -> void:
+	_shell("NODEKINS / ONLINE", "Race Online", "Find racers. We'll choose the circuit and get you to the grid.")
+	var left: VBoxContainer = _column(_body,.95)
+	_spacer(left)
+	online_status = RacingUISkin.paragraph(Matchmaking.message,25)
+	left.add_child(online_status)
+	online_elapsed = RacingUISkin.label("",18,RacingUISkin.CYAN)
+	left.add_child(online_elapsed)
+	_spacer(left)
+	_button(left,&"find_match","FIND MATCH   →",Matchmaking.find_match,true)
+	_button(left,&"cancel_match","Cancel Search",Matchmaking.cancel)
+	_button(left,&"back","←  Main Menu",_leave_online)
+	_add_preview(_column(_body,1.05),true)
+	_footer()
+	_set_screen(&"online")
+	_refresh_online()
+
+func _refresh_online() -> void:
+	if current_screen != &"online" or not is_instance_valid(online_status):
+		return
+	online_status.text = Matchmaking.message
+	var searching: bool = Matchmaking.state in ["connecting","queued","allocating","connecting_race"]
+	buttons[&"find_match"].visible = not searching
+	buttons[&"find_match"].text = "TRY AGAIN   →" if Matchmaking.state == "error" else "FIND MATCH   →"
+	buttons[&"cancel_match"].visible = searching
+	_focus(&"cancel_match" if searching else &"find_match")
+
+func _process(_delta: float) -> void:
+	if current_screen == &"online" and is_instance_valid(online_elapsed):
+		online_elapsed.text = "Searching · %02d:%02d" % [floori(Matchmaking.search_seconds()/60.0),int(Matchmaking.search_seconds())%60] if Matchmaking.state in ["connecting","queued","allocating"] else ""
+
+func _leave_online() -> void:
+	Matchmaking.cancel()
+	show_title()
 
 func show_options() -> void:
 	_shell("NODEKINS / OPTIONS","Options","Set the mix that feels right for you.")
@@ -490,6 +536,7 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		match current_screen:
+			&"online": _leave_online()
 			&"characters", &"options", &"results": show_title()
 			&"tracks", &"customize_kart", &"customize_character": show_characters()
 			&"paused": resume_race()

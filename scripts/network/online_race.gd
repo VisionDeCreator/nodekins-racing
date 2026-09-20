@@ -92,7 +92,7 @@ func _ready() -> void:
 		push_error("Online authority requires a separate --headless server process.")
 		get_tree().quit(2)
 		return
-	world = World.new()
+	world = _create_world()
 	world.name = "World"
 	world.server = server_role
 	add_child(world)
@@ -115,6 +115,10 @@ func _ready() -> void:
 			return
 		multiplayer.multiplayer_peer = transport
 		_log("client_connecting",{"tag":client_tag,"address":address,"port":port})
+
+## Session bootstrap hook; authority/prediction behavior is independent of world selection.
+func _create_world() -> OnlineRaceWorld:
+	return World.new()
 
 func _parse_args() -> void:
 	for arg: String in OS.get_cmdline_user_args():

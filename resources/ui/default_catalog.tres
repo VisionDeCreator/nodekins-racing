@@ -7,6 +7,7 @@
 [ext_resource type="Resource" path="res://resources/tracks/oval.tres" id="route"]
 [ext_resource type="Resource" path="res://resources/tracks/test_glide.tres" id="glide"]
 [ext_resource type="PackedScene" path="res://scenes/track/Track.tscn" id="race"]
+[ext_resource type="PackedScene" path="res://scenes/matchmaking/Loop01World.tscn" id="online_loop"]
 [sub_resource type="Resource" id="Male"]
 script = ExtResource("driver")
 id = &"char_body_male"
@@ -27,6 +28,7 @@ subtitle = "Loop 01 · Floating circuit"
 description = "Sweep through wide turns, charge your drift and take flight across the gap. Watch for items and the lime boost pads."
 features = PackedStringArray("WIDE TURNS", "GLIDE GAP", "ITEMS")
 scene = ExtResource("race")
+online_world = ExtResource("online_loop")
 route = ExtResource("route")
 glide_section = ExtResource("glide")
 [resource]

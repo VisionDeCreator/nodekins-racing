@@ -89,3 +89,5 @@ AudioPreferences="*res://scripts/audio/audio_preferences.gd"
 
 RaceManager="*res://scripts/race/race_manager.gd"
 GameSession="*res://scripts/ui/menu/game_session.gd"
+
+Matchmaking="*res://scripts/matchmaking/matchmaking.gd"

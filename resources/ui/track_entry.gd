@@ -8,3 +8,6 @@ extends Resource
 @export var scene: PackedScene
 @export var route: TrackRoute
 @export var glide_section: GlideSection
+
+## Dedicated-world bootstrap for this track; matchmaking chooses from registered worlds.
+@export var online_world: PackedScene
